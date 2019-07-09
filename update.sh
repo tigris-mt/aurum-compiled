@@ -23,7 +23,7 @@ popd
 git add update.sh
 git rm --cached -r .
 git add update.sh
-git clean -fxdq
+git clean --quiet -fxd
 
 f() {
 	find "$T" -follow -mindepth 1 "$@" -not -iwholename '*/.git*' -printf '%P\n'
