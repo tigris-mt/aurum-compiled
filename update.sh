@@ -7,6 +7,8 @@ T="/tmp/aurum-release"
 
 test -e update.sh
 
+echo "Fetching repository..."
+
 mkdir -p "$T"
 pushd "$T"
 if [ ! -d .git ]; then
@@ -20,10 +22,14 @@ git submodule update --init --recursive
 git clean -fxd
 popd
 
+echo "Cleaning..."
+
 git add update.sh
 git rm --cached -rq .
 git add update.sh
 git clean -fxdq
+
+echo "Copying..."
 
 f() {
 	find "$T" -follow -mindepth 1 "$@" -not -iwholename '*/.git*' -printf '%P\n'
@@ -37,5 +43,9 @@ f -type f | while read n; do
 	cp -RL "$T/$n" "$n"
 done
 
+echo "Committing..."
+
 git add .
 git commit -m "Update: aurum $BRANCH at $(git -C /tmp/aurum-release rev-parse --short HEAD)"
+
+echo "Done."
