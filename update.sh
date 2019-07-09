@@ -3,11 +3,12 @@ set -e
 
 REPO="https://github.com/tigris-mt/aurum"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+T="/tmp/aurum-release"
 
 test -e update.sh
 
-mkdir -p /tmp/aurum-release
-pushd /tmp/aurum-release
+mkdir -p "$T"
+pushd "$T"
 if [ ! -d .git ]; then
 	git init
 	git remote add origin "$REPO"
@@ -24,9 +25,13 @@ git add update.sh
 git clean -fxd
 
 f() {
-	find /tmp/aurum-release -not -iwholename '*/.git*' -printf '%P\n' "$@"
+	find "$T" -not -iwholename '*/.git*' -printf '%P\n' "$@"
 }
 
 f -type d | while read n; do
-	echo $n
+	mkdir -p "$n"
+done
+
+f -type f | while read n; do
+	cp -RL $n .
 done
