@@ -36,3 +36,6 @@ done
 f -type f | while read n; do
 	cp -RL "$T/$n" "$n"
 done
+
+git add .
+git commit -m "Update: aurum $BRANCH at $(git -C /tmp/aurum-release rev-parse --short HEAD)"
