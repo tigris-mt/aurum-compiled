@@ -24,7 +24,7 @@ git add update.sh
 git clean -fxd
 
 f() {
-	find /tmp/aurum-release -not -iwholename '*/.git*' "$@"
+	find /tmp/aurum-release -not -iwholename '*/.git*' -printf '%P\n' "$@"
 }
 
 f -type d | while read n; do
