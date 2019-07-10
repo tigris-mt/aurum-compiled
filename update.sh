@@ -3,7 +3,7 @@ set -e
 
 REPO="https://github.com/tigris-mt/aurum"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-T="/tmp/aurum-release"
+T="/tmp/aurum-release-$BRANCH"
 
 test -e update.sh
 
