@@ -19,7 +19,7 @@ git remote set-url origin "$REPO"
 git fetch origin
 git reset --hard origin/"$BRANCH"
 git submodule update --init --recursive
-git clean -fxd
+git clean -ffxd
 popd
 
 echo "Cleaning..."
