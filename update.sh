@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 REPO="https://github.com/tigris-mt/aurum"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -46,6 +46,6 @@ done
 echo "Committing..."
 
 git add .
-git commit -m "Update: aurum $BRANCH at $(git -C /tmp/aurum-release rev-parse --short HEAD)"
+git commit -m "Update: aurum $BRANCH at $(git -C "$T" rev-parse --short HEAD)"
 
 echo "Done."
