@@ -3,27 +3,37 @@ local S = minetest.get_translator("xmana")
 xmana = {}
 
 function xmana.level_to_mana(level)
-	return math.pow(1.1, level) * 100
+	return math.pow(level, 2.5)
 end
 
 function xmana.mana_to_level(mana)
-	return math.floor(math.max(0, math.log(math.max(0.001, mana / 100)) / math.log(1.1)))
+	return math.floor(math.pow(mana, 1/2.5))
 end
 
 -- Maximum mana possible.
 xmana.MAX_LEVEL = tonumber(minetest.settings:get("xmana.max_level")) or 30
 xmana.MAX = math.ceil(xmana.level_to_mana(xmana.MAX_LEVEL))
 
+-- Callback function to be overridden.
+-- Called whenever mana changes.
+-- See xmana.mana() for a description of the reason.
+xmana.callback = function(player, old, new, reason) end
+
 -- Access a player object's mana. If set is false, return current value. If set is a number, set to that. If relative is true, add the current value to the set.
-function xmana.mana(player, set, relative)
+-- Reason is an optional parameter to describe what changed it.
+-- Current values include: nil by default, "command" if changed by command, "spark" if from mana sparks.
+function xmana.mana(player, set, relative, reason)
 	if set then
+		local old = xmana.mana(player)
 		-- Actual amount set when relative is true is current + set.
-		local set = relative and (set + xmana.mana(player)) or set
+		local set = relative and (set + old) or set
 		-- Clamp to reasonable values.
 		set = math.max(0, math.min(set, xmana.MAX))
 
 		player:get_meta():set_float("xmana:mana", set)
-		hb.change_hudbar(player, "xmana", xmana.mana_to_level(xmana.mana(player)), xmana.MAX_LEVEL)
+		hb.change_hudbar(player, "xmana", xmana.mana_to_level(set), xmana.MAX_LEVEL)
+
+		xmana.callback(player, old, set, reason)
 	else
 		return player:get_meta():get_float("xmana:mana", set)
 	end
@@ -38,7 +48,7 @@ minetest.register_on_joinplayer(function(player)
 	xmana.mana(player, 0)
 end)
 
-hb.register_hudbar("xmana", 0xFFFFFF, S"Mana", {
+hb.register_hudbar("xmana", 0xFFFFFF, S"Mana Level", {
 	bar = "xmana_bg.png",
 	icon = "xmana_icon.png",
 	bgicon = "xmana_bgicon.png"
@@ -68,12 +78,12 @@ minetest.register_chatcommand("mana", {
 			return false, S"Invalid target."
 		end
 
-		xmana.mana(target, amount, relative)
+		xmana.mana(target, amount, relative, "command")
 		return true, S("@1 now has @2 levels (@3 mana)", target:get_player_name(), xmana.mana_to_level(xmana.mana(target)), xmana.mana(target))
 	end,
 })
 
-if minetest.get_modpath("doc") then
+if minetest.get_modpath("doc_basics") then
 	doc.add_entry("basics", "xmana", {
 		name = S"Mana",
 		data = {
@@ -142,7 +152,7 @@ for i,v in ipairs(xmana.spark_values) do
 							gain = 0.2,
 						})
 					end
-					xmana.mana(player, v, true)
+					xmana.mana(player, v, true, "spark")
 					self.object:remove()
 					return
 				else
