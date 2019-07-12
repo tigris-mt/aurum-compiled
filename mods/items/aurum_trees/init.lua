@@ -52,7 +52,7 @@ function m.register(name, def)
 		}, spec)
 
 		-- Register and set name in tree's table.
-		minetest.register_node(ndef.name, ndef)
+		minetest.register_node(":" .. ndef.name, ndef)
 		def[sub] = ndef.name
 		return ndef
 	end
@@ -61,7 +61,7 @@ function m.register(name, def)
 		description = S"Trunk",
 		_doc_items_longdesc = S"The trunk of a tree. It can be cut into planks.",
 		sounds = aurum.sounds.wood(),
-		groups = {dig_chop = 3, tree = 1, flammable = 1},
+		groups = {dig_chop = 3, tree = 1, tree_trunk = 1, flammable = 1},
 	})
 
 	subnode("planks", {
@@ -71,7 +71,7 @@ function m.register(name, def)
 		groups = {dig_chop = 3, wood = 1, flammable = 1},
 	})
 
-	local sapling = subnode("sapling", {
+	subnode("sapling", {
 		description = S"Sapling",
 		_doc_items_longdesc = S"A young tree. Given time, it will grow." .. "\n" .. def.S("It grows on @1.", def.terrain_desc),
 		sounds = aurum.sounds.grass(),
@@ -82,7 +82,7 @@ function m.register(name, def)
 			fixed = {-4 / 16, -8 / 16, -4 / 16, 4 / 16, 7 / 16, 4 / 16}
 		},
 		walkable = true,
-		groups = {dig_hand = 3, flammable = 1, sapling = 1, attached_node = 1, grow_plant = 1},
+		groups = {dig_handle = 3, dig_chop = 3, flammable = 1, sapling = 1, attached_node = 1, grow_plant = 1},
 
 		_on_grow_plant = function(pos, node)
 			-- Ensure there's at least some room above the sapling.
@@ -127,12 +127,12 @@ function m.register(name, def)
 		waving = 2,
 		paramtype = "light",
 		place_param2 = 1,
-		groups = {dig_chop = 3, dig_hand = 3, leaves = 1, flammable = 1, leafdecay = def.leafdecay},
+		groups = {dig_chop = 3, dig_handle = 3, leaves = 1, flammable = 1, leafdecay = def.leafdecay},
 
 		drop = {
 			max_items = 1,
 			items = {
-				{rarity = 10, items = {sapling.name}},
+				{rarity = 10, items = {def.sapling}},
 				{rarity = 1, items = {name .. "_leaves"}},
 			},
 		},
@@ -155,4 +155,5 @@ end
 
 aurum.dofile("decorations/init.lua")
 aurum.dofile("default_trees.lua")
+aurum.dofile("fuel.lua")
 aurum.dofile("leafdecay.lua")
