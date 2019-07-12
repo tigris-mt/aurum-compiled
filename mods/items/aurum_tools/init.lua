@@ -10,7 +10,9 @@ function aurum.tools.register_variant(name)
 	}
 
 	minetest.override_item(name, properties)
-	minetest.register_tool(":" .. properties._enchanted, table.combine(def, properties))
+	minetest.register_tool(":" .. properties._enchanted, table.combine({_doc_items_create_entry = false}, def, properties, {
+		groups = table.combine({not_in_creative_inventory = 1}, def.groups),
+	}))
 	return properties
 end
 
@@ -45,8 +47,8 @@ function aurum.tools.get_enchants(name)
 	return ret
 end
 
-doc.sub.items.register_factoid("tools", "misc", function(itemstring, def)
-	if def._enchant_levels then
+doc.sub.items.register_factoid("tools", "use", function(itemstring, def)
+	if aurum.tools.get_enchants(itemstring) then
 		local keys = {}
 		for k,v in pairs(aurum.tools.get_enchants(itemstring)) do
 			if v then
@@ -55,9 +57,11 @@ doc.sub.items.register_factoid("tools", "misc", function(itemstring, def)
 		end
 		return S("This tool has a potential enchantment level of @1.", def._enchant_levels) .. ((#keys > 0) and ("\n" .. S("Enchantment types: @1", table.concat(keys, ", "))) or "")
 	end
+	return ""
 end)
 
 aurum.tools.enchants = {}
 
 aurum.dofile("default_enchants.lua")
 aurum.dofile("default_tools.lua")
+aurum.dofile("hammer_break.lua")

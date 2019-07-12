@@ -49,6 +49,7 @@ function m.register(name, def)
 		local ndef = table.combine({
 			name = name .. "_" .. sub,
 			tiles = {def.texture_base .. "_" .. sub .. ".png"},
+			_tree = def,
 		}, spec)
 
 		-- Register and set name in tree's table.
@@ -73,8 +74,8 @@ function m.register(name, def)
 
 	subnode("sapling", {
 		description = S"Sapling",
-		_doc_items_longdesc = S"A young tree. Given time, it will grow." .. "\n" .. def.S("It grows on @1.", def.terrain_desc),
-		sounds = aurum.sounds.grass(),
+		_doc_items_longdesc = S"A young tree.",
+		sounds = aurum.sounds.leaves(),
 		paramtype = "light",
 		drawtype = "plantlike",
 		selection_box = {
@@ -82,7 +83,7 @@ function m.register(name, def)
 			fixed = {-4 / 16, -8 / 16, -4 / 16, 4 / 16, 7 / 16, 4 / 16}
 		},
 		walkable = true,
-		groups = {dig_handle = 3, dig_chop = 3, flammable = 1, sapling = 1, attached_node = 1, grow_plant = 1},
+		groups = {dig_snap = 3, flammable = 1, sapling = 1, attached_node = 1, grow_plant = 1},
 
 		_on_grow_plant = function(pos, node)
 			-- Ensure there's at least some room above the sapling.
@@ -121,13 +122,13 @@ function m.register(name, def)
 	subnode("leaves", {
 		description = S"Leaves",
 		_doc_items_longdesc = S"A bundle of soft leaves. They will decay when not near a trunk.",
-		sounds = aurum.sounds.grass(),
+		sounds = aurum.sounds.leaves(),
 
 		drawtype = "allfaces_optional",
 		waving = 2,
 		paramtype = "light",
 		place_param2 = 1,
-		groups = {dig_chop = 3, dig_handle = 3, leaves = 1, flammable = 1, leafdecay = def.leafdecay},
+		groups = {dig_snap = 3, leaves = 1, flammable = 1, leafdecay = def.leafdecay},
 
 		drop = {
 			max_items = 1,
@@ -152,6 +153,15 @@ function m.register(name, def)
 
 	m.types[name] = def
 end
+
+doc.sub.items.register_factoid("nodes", "use", function(itemstring, def)
+	if minetest.get_item_group(itemstring, "sapling") > 0 then
+		if def._tree then
+			return S("This sapling will grow into a tree when left for some time on @1.", def._tree.terrain_desc)
+		end
+	end
+	return ""
+end)
 
 aurum.dofile("decorations/init.lua")
 aurum.dofile("default_trees.lua")
