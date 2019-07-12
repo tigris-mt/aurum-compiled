@@ -27,6 +27,9 @@ Toughless levels range from 0 to 3.
 * `psyche`: Mental/magic.
 
 # Crafting
+* `tool`: For tools.
+* `equipment`: For equipment.
+  * Must define `eq_x` group.
 
 # Interaction
 * `flammable=1`: This node can burn.
