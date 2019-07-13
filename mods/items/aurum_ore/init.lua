@@ -22,64 +22,81 @@ function aurum.ore.register(name, def)
 		size = 3,
 
 		depth = 10,
-		growth = -400,
+		growths = {},
+
+		ore = name .. "_ore",
+		ingot = name .. "_ingot",
+		block = name .. "_block",
+
+		ore_override = {},
 	}, def)
 
-	minetest.register_node(":" .. name .. "_ore", {
-		_doc_items_longdesc = S"A mineable block of metal ore.",
-		description = S("@1 Ore", def.description),
-		tiles = {("aurum_base_stone.png^((%s^aurum_ore_ore.png)^[makealpha:255,0,255)"):format(def.texture)},
-		groups = {dig_pick = math.max(1, def.level), level = def.level},
-		sounds = aurum.sounds.stone(),
-	})
+	if def.ingot then
+		minetest.register_craftitem(":" .. def.ingot, {
+			_doc_items_longdesc = S"Smelted metal molded into a portable shape.",
+			description = S("@1 Ingot", def.description),
+			inventory_image = ("(%s^aurum_ore_ingot.png)^[makealpha:255,0,255"):format(def.texture),
+		})
+	end
 
-	minetest.register_craftitem(":" .. name .. "_ingot", {
-		_doc_items_longdesc = S"Smelted metal molded into a portable shape.",
-		description = S("@1 Ingot", def.description),
-		inventory_image = ("(%s^aurum_ore_ingot.png)^[makealpha:255,0,255"):format(def.texture),
-	})
+	if def.block then
+		minetest.register_node(":" .. def.block, {
+			_doc_items_longdesc = S"A solid chunk of metal.",
+			description = S("@1 Block", def.description),
+			tiles = {("%s^aurum_ore_block.png"):format(def.texture)},
+			groups = {dig_pick = math.min(3, def.level + 1), level = math.min(3, def.level + 1)},
+			sounds = aurum.sounds.metal(),
+		})
+	end
 
-	minetest.register_node(":" .. name .. "_block", {
-		_doc_items_longdesc = S"A solid chunk of metal.",
-		description = S("@1 Block", def.description),
-		tiles = {("%s^aurum_ore_block.png"):format(def.texture)},
-		groups = {dig_pick = math.min(3, def.level + 1), level = math.min(3, def.level + 1)},
-		sounds = aurum.sounds.metal(),
-	})
+	if def.ore then
+		minetest.register_node(":" .. def.ore, table.combine({
+			_doc_items_longdesc = S"A mineable block of metal ore.",
+			description = S("@1 Ore", def.description),
+			tiles = {("aurum_base_stone.png^((%s^aurum_ore_ore.png)^[makealpha:255,0,255)"):format(def.texture)},
+			groups = {dig_pick = math.max(1, def.level), level = def.level},
+			sounds = aurum.sounds.stone(),
+		}, def.ore_override))
 
-	for _,realmid in ipairs(def.realms) do
-		local realm = aurum.realms.get(realmid)
-		local biomes = assert(aurum.biomes.realms[realmid])
+		for _,realmid in ipairs(def.realms) do
+			local realm = aurum.realms.get(realmid)
+			local biomes = assert(aurum.biomes.realms[realmid])
 
-		local d = {
-			biomes = biomes,
-			ore_type = "scatter",
-			ore = name .. "_ore",
-			wherein = realm.stone,
-			clust_scarcity = math.pow(def.rarity, 3),
-			clust_num_ores = def.num,
-			clust_size = def.size,
-			y_max = def.depth + realm.y,
-			y_min = realm.global_box.a.y,
-		}
-		minetest.register_ore(d)
+			local combined = table.icombine({def.depth}, def.growths)
+			for index,depth in ipairs(combined) do
 
-		if def.growth then
-			minetest.register_ore(table.combine(d, {
-				clust_scarcity = math.pow(def.rarity * 0.75, 3),
-				clust_num_ores = def.num * 1.25,
-				clust_size = def.size * 1.25,
-				y_max = def.growth + realm.y,
-			}))
+				local nextdepth = combined[index + 1] or realm.global_box.a.y
+
+				local d = {
+					biomes = biomes,
+					ore_type = "scatter",
+					ore = def.ore,
+					wherein = realm.biome_default.node_stone,
+					clust_scarcity = math.floor(math.pow(def.rarity, 3) + 0.5),
+					clust_num_ores = def.num,
+					clust_size = math.floor(def.size + 0.5),
+					y_max = depth + realm.y,
+					y_min = nextdepth,
+				}
+
+				if index == 1 then
+					minetest.register_ore(d)
+				else
+					local m = index - 1
+
+					minetest.register_ore(table.combine(d, {
+						clust_scarcity = math.floor(math.pow(def.rarity / (1 + m / 10), 3) + 0.5),
+						clust_num_ores = math.floor(def.num * (1 + m / 10) + 0.5),
+						clust_size = math.floor(def.size * (1 + m / 10) + 0.5),
+						y_max = depth + realm.y,
+					}))
+				end
+			end
 		end
 	end
 
 	aurum.ore.ores[name] = def
 end
 
-aurum.ore.register("aurum_ore:copper", {
-	description = S"Copper",
-	texture = "aurum_ore_white.png^[colorize:#B87333:255",
-	level = 0, depth = 0, growth = -200,
-	rarity = 9, num = 6, size = 3,
-})
+aurum.dofile("mana_beans.lua")
+aurum.dofile("metals.lua")
