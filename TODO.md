@@ -3,9 +3,10 @@
     * Used in crafting table.
   * Paste + gravel = dirt.
     * Grass spreads to bare dirt.
-  * Hammering stone makes gravel.
+  * Crafting table.
   * Furnace.
-    * Ingots, blocks.
+    * Smelting ingots.
+    * Crafting blocks.
   * Sticks, planks.
   * Tools.
   * Armor.
@@ -20,3 +21,4 @@
   * Lava
     * Lava affected by fire resistance.
   * Fall damage resistance.
+  * Biomes have oceans and underground.
