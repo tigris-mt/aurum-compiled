@@ -46,7 +46,7 @@ done
 echo "Committing..."
 
 git add .
-git rm -rq submodules
+git rm -frq submodules
 git commit -m "Update: aurum $BRANCH at $(git -C "$T" rev-parse --short HEAD)"
 
 echo "Done."
