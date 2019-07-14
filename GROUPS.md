@@ -29,15 +29,18 @@ Toughless levels range from 0 to 3.
 # Crafting
 * `equipment`: For equipment.
   * Must define `eq_x` group.
+* `stick`: For sticks. The doc modpack semi-requires a stick group.
 * `tool`: For tools.
 
 # Interaction
 * `flammable=1`: This node can burn.
+* `cook_temp=x`: This node can only be cooked in a cooker with a temperature range including x.
+  * `Smelter`: 10-20
+  * `Flare Box`: 0-10
 * `grow_plant=1`: This node has an _on_grow_plant(pos, node) function defined.
 * `leafdecay=x`: This node will decay and drop items if it is >x nodes away from a group:tree.
 * `leaves=1`: This node is leaves.
 * `sapling=1`: This node is a sapling.
 * `soil=1`: Things may grow here.
-* `tree=1`: This node is part of a tree (trunk or branch).
-* `tree=1`: This node is specifically a tree trunk.
+* `tree=1`: This node is a tree trunk.
 * `wood=1`: This node is wood (planks).

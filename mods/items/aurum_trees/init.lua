@@ -62,7 +62,7 @@ function m.register(name, def)
 		description = S"Trunk",
 		_doc_items_longdesc = S"The trunk of a tree. It can be cut into planks.",
 		sounds = aurum.sounds.wood(),
-		groups = {dig_chop = 3, tree = 1, tree = 1, flammable = 1},
+		groups = {dig_chop = 3, tree = 1, flammable = 1},
 		tiles = {def.texture_base .. "_trunk_top.png", def.texture_base .. "_trunk_top.png", def.texture_base .. "_trunk.png"},
 
 		paramtype2 = "facedir",
@@ -75,6 +75,11 @@ function m.register(name, def)
 		sounds = aurum.sounds.wood(),
 		groups = {dig_chop = 3, wood = 1, flammable = 1},
 	})
+
+	minetest.register_craft{
+		output = def.planks .. " 4",
+		recipe = {{def.trunk}},
+	}
 
 	subnode("sapling", {
 		description = S"Sapling",
