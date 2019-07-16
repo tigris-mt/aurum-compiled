@@ -1,6 +1,4 @@
-* Armor
 * Death
-	* Drop items.
 	* Set respawn point.
 	* Death outside of realms.
 * Enchanting
