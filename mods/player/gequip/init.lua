@@ -14,18 +14,12 @@ function gequip.register_type(name, def)
 		-- Inventory list name.
 		list_name = "gequip_" .. name,
 
-		-- Group name. Only items with this group can be equipped here.
-		group = "eq_" .. name,
-
 		-- Default definition of individual equipment.
 		-- Defaults below.
 		defaults = {},
 	}, def)
 
 	def.defaults = table.combine({
-		-- How many times can this equipment take damage before breaking?
-		-- 0 = infinite.
-		uses = 200,
 	}, def.defaults)
 
 	minetest.register_on_player_inventory_action(function(player, action, inv, info)
@@ -47,7 +41,7 @@ function gequip.register_type(name, def)
 		end
 
 		-- Invalid items can't be inserted.
-		if minetest.get_item_group(stack:get_name(), def.group) == 0 then
+		if stack:get_definition()._eqtype ~= name then
 			return 0
 		end
 
@@ -86,7 +80,7 @@ function gequip.get_eqdef(stack)
 	local metadef = stack:get_meta():contains("eqdef") and minetest.deserialize(stack:get_meta():get_string("eqdef")) or {}
 
 	-- Combine slot defaults, item defition defaults, and item meta eqdef.
-	return table.combine(typedef.defaults, def.gequipdef or {}, metadef)
+	return table.combine(typedef.defaults, def._eqdef or {}, metadef)
 end
 
 -- Apply all equipment to the player.
