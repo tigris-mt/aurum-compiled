@@ -1,8 +1,8 @@
 * Crafting
-	* Furnace.
-	* Tools.
+	* Bronze
 	* Eternal flare
 		* Made from mana beans, paste, and sticks.
+	* Flare Box
 * Armor
 * Death
 	* Drop items.
@@ -19,10 +19,13 @@
 		* Lava affected by fire resistance.
 	* Fall damage resistance.
 	* Biomes have oceans and underground.
+	* Realm borders.
 * Plants
 	* Grass spreads to bare dirt.
 	* Wild plants/flowers.
 	* Farming.
+	* Method of quickly growing plants.
+		* Something found in the Ancient Roots?
 * Mobs
 	* Farming.
 	* Taming.
@@ -33,3 +36,4 @@
 * The Loom
 	* Node-based "worm" "mob" that eats blocks.
 		* Heckweaver, eats nodes and leaves behind Heck.
+* Flight
