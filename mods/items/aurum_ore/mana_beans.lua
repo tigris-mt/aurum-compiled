@@ -19,7 +19,12 @@ aurum.ore.register("aurum_ore:mana_beans", {
 				{items = {"aurum_ore:mana_bean 2"}, rarity = 3},
 			},
 		},
+
+		after_dig_node = function(pos, _, _, player)
+			aurum.player.mana_sparks(player, pos, "digging", 1, 2)
+		end,
 	},
+
 	ingot = false,
 	block = false,
 	recipes = false,
