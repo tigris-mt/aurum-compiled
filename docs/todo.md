@@ -1,6 +1,3 @@
-* Environment
-	* Don't spawn underground.
-	* Realm sky/environment.
 * Plants
 	* Grass spreads to bare dirt.
 	* Wild plants/flowers.
