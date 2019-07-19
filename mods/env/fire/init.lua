@@ -361,6 +361,13 @@ if minetest.get_modpath("default") then
 
 -- Aurum
 elseif minetest.get_modpath("aurum") then
+	local d = {
+		damage_per_second = 20,
+		_damage_type = "burn",
+	}
+	minetest.override_item("fire:basic_flame", d)
+	minetest.override_item("fire:permanent_flame", d)
+
 	minetest.override_item("fire:flint_and_steel", {
 		sound = aurum.sounds.tool(),
 	})
