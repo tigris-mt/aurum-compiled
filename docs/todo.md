@@ -1,4 +1,3 @@
-* Fire
 * Liquid transport.
 * Plants
 	* Wild plants/flowers.
@@ -24,3 +23,4 @@
 	* Extract own mana into physical form.
 	* Enchanted flare.
 	* Item naming.
+* Awards
