@@ -116,6 +116,9 @@ minetest.register_tool("fire:flint_and_steel", {
 	description = "Flint and Steel",
 	inventory_image = "fire_flint_steel.png",
 
+	_doc_items_usagehelp = "Punch a flammable node to ignite it.",
+	_doc_items_hidden = false,
+
 	on_use = function(itemstack, user, pointed_thing)
 		local sound_pos = pointed_thing.above or user:get_pos()
 		minetest.sound_play(

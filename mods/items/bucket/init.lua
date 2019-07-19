@@ -50,6 +50,8 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 			liquids_pointable = true,
 			groups = groups,
 
+			_doc_items_usagehelp = "Right-click on a node to empty this bucket's liquid on it.",
+
 			on_place = function(itemstack, user, pointed_thing)
 				-- Must be pointing to node
 				if pointed_thing.type ~= "node" then
@@ -107,6 +109,8 @@ minetest.register_craftitem("bucket:bucket_empty", {
 	inventory_image = "bucket.png",
 	groups = {tool = 1},
 	liquids_pointable = true,
+	_doc_items_usagehelp = "Punch a liquid source node to collect it in this bucket.",
+	_doc_items_hidden = false,
 	on_use = function(itemstack, user, pointed_thing)
 		if pointed_thing.type == "object" then
 			pointed_thing.ref:punch(user, 1.0, { full_punch_interval=1.0 }, nil)
