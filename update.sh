@@ -43,6 +43,8 @@ f -type f | while read n; do
 	cp -RL "$T/$n" "$n"
 done
 
+find "$T" -type l -printf '%P\n' | while read n; do echo "$n" '->' "$(readlink "$n")"; done > symlink_report.txt
+
 echo "Committing..."
 
 git add .
