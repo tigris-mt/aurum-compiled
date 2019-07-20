@@ -1,15 +1,18 @@
 ## World Layout
-### Seven Planes
-* Aurum (gold, metal) in the center. The Material Plane.
-* The Aether (light) above.
-* The Loom (dark, twisting) below.
-* Inferno (flame, power) to the north.
-* Abyss (cold, stasis) to the south.
-* The Ancient Roots (nature, growth) to the east.
-* The Fleeting Fell (psyche, decay) to the west.
+### Realms
+* Aurum: Standard green world with stone and ore. Green and grey.
+* The Loom: Twisted version of Aurum, filled with hostility and strange materials. Red and orange.
+* The Aether: Landmass floating on the void (no underground). White and gold. The realm of Hyperion.
+* Primus Hortum: The vortex of natural life, filled with decay and new growth to no end. Dark green and brown.
+* Ultimus Hortum: The remains of the ancient world, a frozen wasteland filled with the spectres of the past. Very little life. Blue and black.
+
+## Tentative Lore
+The previous titan of the world abandoned it and let Primus Hortum and the Loom leak into Aurum, corrupting it and decaying into Ultimus Hortum.
+You are another titan come to reverse the corruption of Aurum. Of the remaining inhabitants, some look for your coming and others hate it.
+You must conquer all realms and overtake the previous titan's power based in the Aether to become the true Titan of Aurum.
 
 ## Game Goals
-* Variety of environments between the seven planes.
+* Variety of environments between the realms.
 * NPCs, villages, discoverable lore.
 * Progression through actions such as mining or defeating mobs.
 	* This will grant "mana" to be used in upgrading items and personal attributes or charging rods.
