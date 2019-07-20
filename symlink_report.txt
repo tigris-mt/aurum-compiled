@@ -1,22 +1,22 @@
-mods/core/sfinv -> 
-mods/core/player_api -> 
-mods/core/aurum/sounds -> 
-mods/player/aurum_gui/textures/gui_furnace_arrow_bg.png -> 
-mods/player/aurum_gui/textures/gui_formbg.png -> 
-mods/player/aurum_gui/textures/gui_furnace_arrow_fg.png -> 
-mods/player/aurum_gui/textures/gui_hb_bg.png -> 
-mods/player/aurum_gui/textures/heart.png -> 
-mods/items/aurum_base/textures/default_lava_flowing_animated.png -> 
-mods/items/aurum_base/textures/default_water_flowing_animated.png -> 
-mods/items/aurum_base/textures/default_item_smoke.png -> 
-mods/items/aurum_base/textures/crack_anylength.png -> 
-mods/items/aurum_base/textures/default_river_water_source_animated.png -> 
-mods/items/aurum_base/textures/default_water_source_animated.png -> 
-mods/items/aurum_base/textures/default_lava_source_animated.png -> 
-mods/items/aurum_base/textures/default_river_water_flowing_animated.png -> 
-mods/items/aurum_base/sounds/default_cool_lava.3.ogg -> 
-mods/items/aurum_base/sounds/default_cool_lava.2.ogg -> 
-mods/items/aurum_base/sounds/default_cool_lava.1.ogg -> 
-mods/items/aurum_cook/textures/default_furnace_fire_fg.png -> 
-mods/items/aurum_cook/textures/default_furnace_fire_bg.png -> 
-mods/items/aurum_tools/textures/wieldhand.png -> 
+mods/core/sfinv -> ../../submodules/minetest_game/mods/sfinv
+mods/core/player_api -> ../../submodules/minetest_game/mods/player_api
+mods/core/aurum/sounds -> ../../../submodules/minetest_game/mods/default/sounds
+mods/player/aurum_gui/textures/gui_furnace_arrow_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_bg.png
+mods/player/aurum_gui/textures/gui_formbg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_formbg.png
+mods/player/aurum_gui/textures/gui_furnace_arrow_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_fg.png
+mods/player/aurum_gui/textures/gui_hb_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_hb_bg.png
+mods/player/aurum_gui/textures/heart.png -> ../../../../submodules/minetest_game/mods/default/textures/heart.png
+mods/items/aurum_base/textures/default_lava_flowing_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_lava_flowing_animated.png
+mods/items/aurum_base/textures/default_water_flowing_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_water_flowing_animated.png
+mods/items/aurum_base/textures/default_item_smoke.png -> ../../../../submodules/minetest_game/mods/default/textures/default_item_smoke.png
+mods/items/aurum_base/textures/crack_anylength.png -> ../../../../submodules/minetest_game/mods/default/textures/crack_anylength.png
+mods/items/aurum_base/textures/default_river_water_source_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_river_water_source_animated.png
+mods/items/aurum_base/textures/default_water_source_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_water_source_animated.png
+mods/items/aurum_base/textures/default_lava_source_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_lava_source_animated.png
+mods/items/aurum_base/textures/default_river_water_flowing_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_river_water_flowing_animated.png
+mods/items/aurum_base/sounds/default_cool_lava.3.ogg -> ../../../../submodules/minetest_game/mods/default/sounds/default_cool_lava.3.ogg
+mods/items/aurum_base/sounds/default_cool_lava.2.ogg -> ../../../../submodules/minetest_game/mods/default/sounds/default_cool_lava.2.ogg
+mods/items/aurum_base/sounds/default_cool_lava.1.ogg -> ../../../../submodules/minetest_game/mods/default/sounds/default_cool_lava.1.ogg
+mods/items/aurum_cook/textures/default_furnace_fire_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_fg.png
+mods/items/aurum_cook/textures/default_furnace_fire_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_bg.png
+mods/items/aurum_tools/textures/wieldhand.png -> ../../../../submodules/minetest_game/mods/default/textures/wieldhand.png
