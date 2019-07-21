@@ -20,3 +20,4 @@ mods/player/aurum_gui/textures/gui_furnace_arrow_bg.png -> ../../../../submodule
 mods/player/aurum_gui/textures/gui_furnace_arrow_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_fg.png
 mods/player/aurum_gui/textures/gui_hb_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_hb_bg.png
 mods/player/aurum_gui/textures/heart.png -> ../../../../submodules/minetest_game/mods/default/textures/heart.png
+mods/player/creative -> ../../submodules/minetest_game/mods/creative

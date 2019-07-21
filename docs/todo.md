@@ -8,16 +8,14 @@
 * Enchanting
 	* Way to gain enchantments.
 	* Enchantment applying.
-	* Extract own mana into physical form.
-	* Enchanted flare.
 	* Item naming.
 * Magic (potions and rods).
+	* Spells created by rituals to be applied to potions and/or rods.
 	* Plant growth stimulant.
 
 # Extended Gameplay
 * Moreblocks or similiar.
 * Flight
-* Creative or giveme inventory.
 * Hand swapping.
 * Awards
 
