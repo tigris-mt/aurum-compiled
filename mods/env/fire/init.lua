@@ -2,6 +2,8 @@
 
 fire = {}
 
+local creative_exists = minetest.global_exists("creative")
+
 -- 'Enable fire' setting
 
 local fire_enabled = minetest.settings:get_bool("enable_fire")
@@ -143,7 +145,7 @@ minetest.register_tool("fire:flint_and_steel", {
 				minetest.set_node(pointed_thing.above, {name = "fire:basic_flame"})
 			end
 		end
-		if not (minetest.global_exists("creative") and creative.is_enabled_for
+		if not (creative_exists and creative.is_enabled_for
 				and creative.is_enabled_for(player_name)) then
 			-- Wear tool
 			local wdef = itemstack:get_definition()
@@ -332,7 +334,7 @@ if fire_enabled then
 end
 
 -- Minetest Game
-if minetest.get_modpath("default") then
+if minetest.get_modpath("default") and minetest.settings:get_bool("fire.mtg", true) then
 	minetest.override_item("fire:flint_and_steel", {
 		sound = {breaks = "default_tool_breaks"},
 	})

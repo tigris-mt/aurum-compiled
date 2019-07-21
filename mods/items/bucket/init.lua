@@ -176,8 +176,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 	end,
 })
 
--- MTG
-if minetest.get_modpath("default") then
+if minetest.get_modpath("default") and minetest.settings:get("bucket.mtg", true) then
 	minetest.register_craft({
 		output = 'bucket:bucket_empty 1',
 		recipe = {
