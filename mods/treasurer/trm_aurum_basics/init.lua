@@ -32,9 +32,15 @@ minetest.register_on_mods_loaded(function()
 	treasurer.register_treasure("aurum_flare:flare", 0.5, 1, {1, 10}, 0, {"light"})
 
 	list({
+		"aurum_base:stone_brick",
+	}, 0.5, 1, {1, 30}, 0, {"building_block"})
+
+	list({
 		"aurum_cook:oven",
 		"aurum_cook:smelter",
 		"aurum_storage:box",
+		"aurum_magic:altar",
+		"aurum_enchants:table",
 	}, 0.5, 3, {1, 10}, 0, {"worker"})
 
 	list({
