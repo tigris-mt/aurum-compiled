@@ -25,13 +25,8 @@ local function make(size)
 end
 
 local list = {}
-
-for x=1,7 do
-	for y=2,6 do
-		for z=1,7 do
-			table.insert(list, make(vector.new(x, y, z)))
-		end
-	end
+for _,pos in ipairs(aurum.box.iterate(aurum.box.new(vector.new(1, 2, 1), vector.new(7, 6, 7)))) do
+	table.insert(list, make(pos))
 end
 
 for _,d in ipairs(list) do
@@ -40,7 +35,13 @@ for _,d in ipairs(list) do
 		place_on = {"group:soil", "aurum_base:gravel", "group:stone", "group:sand"},
 		sidelen = 80,
 		fill_ratio = 0.0001 / #list,
-		biomes = aurum.biomes.get_all_group("aurum:aurum", {"base"}),
+		biomes = aurum.set.to_array(aurum.set.difference(
+			aurum.set(aurum.biomes.get_all_group("aurum:aurum", {"base"})),
+			aurum.set.intersection(
+				aurum.set(aurum.biomes.get_all_group("aurum:aurum", {"base"})),
+				aurum.set(aurum.biomes.get_all_group("forest", {"base"}))
+			)
+		)),
 		schematic = d.schematic,
 		rotation = "random",
 		flags = {place_center_x = true, place_center_y = false, place_center_z = true, force_placement = true},
@@ -52,9 +53,9 @@ for _,d in ipairs(list) do
 	-- More common in the barrens.
 	minetest.register_decoration(table.combine(def, {
 		fill_ratio = 0.0004 / #list,
-		biomes = table._and(
-			aurum.biomes.get_all_group("aurum:aurum", {"base"}),
-			aurum.biomes.get_all_group("barren", {"base"})
-		),
+		biomes = aurum.set.to_array(aurum.set.intersection(
+			aurum.set(aurum.biomes.get_all_group("aurum:aurum", {"base"})),
+			aurum.set(aurum.biomes.get_all_group("barren", {"base"}))
+		)),
 	}))
 end
