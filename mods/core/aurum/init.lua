@@ -109,6 +109,24 @@ function aurum.match_item(item, test)
 	end
 end
 
+function aurum.info_message(player, message)
+	cmsg.push_message_player(player, message)
+	minetest.chat_send_player(player:get_player_name(), message)
+end
+
+-- Set as allow_metadata_inventory_move to delegate all work to put/take.
+function aurum.metadata_inventory_move_delegate(pos, from_list, from_index, to_list, to_index, count, player)
+	local def = minetest.registered_nodes[minetest.get_node(pos).name]
+	local inv = minetest.get_meta(pos):get_inventory()
+	local actual_stack = inv:get_stack(from_list, from_index)
+	actual_stack:set_count(count)
+	return math.min(
+		count,
+		def.allow_metadata_inventory_put and def.allow_metadata_inventory_put(pos, to_list, to_index, actual_stack, player) or count,
+		def.allow_metadata_inventory_take and def.allow_metadata_inventory_take(pos, from_list, from_index, actual_stack, player) or count
+	)
+end
+
 aurum.dofile("lua_utils.lua")
 aurum.dofile("set.lua")
 
