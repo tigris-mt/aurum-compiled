@@ -94,9 +94,6 @@ function m.register(id, def)
 
 		-- Apply client-side appearances.
 		apply_player = function(player)
-			player:set_sky({}, "regular", {})
-			player:set_clouds({density = 0.4})
-
 			aurum.realms.check_underground(player, -100, function()
 				player:set_sky(0, "plain", {})
 				player:set_clouds{density = 0}
@@ -109,6 +106,7 @@ function m.register(id, def)
 			node_stone = "aurum_base:stone",
 			node_water = "aurum_base:water_source",
 			node_river_water = "aurum_base:river_water_source",
+			depth_filler = 0,
 			node_riverbed = "aurum_base:sand",
 			depth_riverbed = 2,
 			node_cave_liquid = {"aurum_base:water_source", "aurum_base:lava_source"},
