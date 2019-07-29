@@ -1,6 +1,7 @@
 local S = minetest.get_translator()
 aurum.portals = {}
 
+-- Convert <pos> in realm <from> to the proportional position in realm <to>.
 function aurum.portals.relative_pos(from, to, pos)
 	local from = aurum.realms.get(from)
 	local to = aurum.realms.get(to)
@@ -45,6 +46,7 @@ minetest.register_craft{
 local teleporting = {}
 
 function aurum.portals.teleport(player, from_pos, to_realm)
+	-- Check which realm we're teleporting from.
 	local from_realm = aurum.pos_to_realm(from_pos)
 	if not from_realm then
 		minetest.log("warning", ("Invalid portal teleportation attempted at %s to %s by %s."):format(minetest.pos_to_string(from_pos), to_realm, player:get_player_name()))
@@ -59,6 +61,7 @@ function aurum.portals.teleport(player, from_pos, to_realm)
 		to_realm
 	)
 
+	-- If we're already teleporting to the same place, do nothing.
 	if teleporting[name] == key then
 		return
 	end
@@ -70,14 +73,43 @@ function aurum.portals.teleport(player, from_pos, to_realm)
 	aurum.info_message(player, S("Teleporting to @1...", rdef.description))
 	teleporting[name] = key
 
-	local function landing_point(create)
+	-- Find a landing point.
+	local function landing_point(search)
 		local pos = aurum.portals.relative_pos(from_realm, to_realm, from_pos)
+		if search then
+			local box = aurum.box.new_radius(pos, vector.new(8, 8, 8))
+			local poses = minetest.find_nodes_in_area(box.a, box.b, "aurum_portals:portal_" .. from_realm)
+			-- There's an existing portal.
+			if #poses > 0 then
+				return poses[math.random(#poses)]
+			-- Create a new portal.
+			else
+				local poses = aurum.box.iterate(box, pos)
+				for _,pos in ipairs(poses) do
+					local node = minetest.get_node(pos)
+					if node.name == "air" or node.name == rdef.biome_default.node_stone then
+						if not minetest.is_protected(pos, "") then
+							minetest.set_node(pos, {name = "aurum_portals:portal_" .. from_realm})
+							return pos
+						end
+					end
+				end
+			end
+
+			-- No place to build portal.
+			return nil
+		end
 		return pos
 	end
 
-	aurum.player.teleport_guarantee(player, aurum.box.new_radius(landing_point(), vector.new(32, 32, 32)), function(player)
-		aurum.player.teleport(player, landing_point(true))
-		aurum.info_message(player, S("Teleported to @1.", rdef.description))
+	aurum.player.teleport_guarantee(player, aurum.box.new_radius(landing_point(), vector.new(8, 8, 8)), function(player)
+		local pos = landing_point(true)
+		if pos then
+			aurum.player.teleport(player, vector.add(pos, vector.new(0, 0.5, 0)))
+			aurum.info_message(player, S("Teleported to @1.", rdef.description))
+		else
+			aurum.info_message(player, S"No portal could be opened on the other side.")
+		end
 		teleporting[name] = nil
 	end, function(player)
 		-- Recalculate key.
