@@ -19,10 +19,15 @@ m.register("aurum_trees:pander", {
 		simple = false,
 		wide = false,
 		very_tall = true,
+		huge = true,
+		giant = true,
 	},
 })
 
 m.register("aurum_trees:drywood", {
 	description = "Drywood",
 	texture_base = "aurum_trees_drywood_%s.png",
+	decorations = {
+		huge = true,
+	},
 })

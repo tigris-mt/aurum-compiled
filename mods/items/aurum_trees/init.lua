@@ -30,8 +30,15 @@ function m.register(name, def)
 		decorations = table.combine({
 			simple = true,
 			wide = true,
+			double = true,
 			tall = true,
 		}, def.decorations or {}),
+
+		-- Decoration weight multipliers.
+		decoweights = table.combine({
+			huge = 0.25,
+			giant = 0.1,
+		}, def.decoweights or {}),
 
 		decodefs = {},
 	})
@@ -117,7 +124,16 @@ function m.register(name, def)
 			local dk = table.keys(def.decodefs)
 			local d = def.decodefs[dk[math.random(#dk)]]
 			minetest.remove_node(pos)
-			minetest.place_schematic(pos, d.schematic, d.rotation, {}, false, d.flags)
+
+			local function remove_force_place(schematic)
+				local ret = table.copy(schematic)
+				for _,v in ipairs(ret.data) do
+					v.force_place = nil
+				end
+				return ret
+			end
+
+			minetest.place_schematic(pos, remove_force_place(d.schematic), d.rotation, {}, false, d.flags)
 			return true
 		end,
 
