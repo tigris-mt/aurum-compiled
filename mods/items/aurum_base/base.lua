@@ -70,6 +70,37 @@ minetest.register_node("aurum_base:dark_grass", {
 	_on_grow_plant = aurum.base.dirt_spread,
 })
 
+minetest.register_node("aurum_base:snow", {
+	description = S"Snow",
+	tiles = {"aurum_base_snow.png"},
+	is_ground_content = true,
+	sounds = aurum.sounds.snow(),
+	groups = {dig_dig = 3, cools_lava = 1, snow = 1},
+})
+
+minetest.register_node("aurum_base:ice", {
+	description = S"Ice",
+	tiles = {"aurum_base_ice.png"},
+	paramtype = "light",
+	is_ground_content = true,
+	sounds = aurum.sounds.glass(),
+	drawtype = "glasslike",
+	groups = {dig_pick = 3, cools_lava = 1, slippery = 3},
+})
+
+minetest.register_node("aurum_base:cave_ice", {
+	description = S"Cave Ice",
+	_doc_items_create_entry = false,
+	tiles = {"aurum_base_ice.png"},
+	paramtype = "light",
+	is_ground_content = true,
+	sounds = aurum.sounds.glass(),
+	groups = {dig_pick = 3, cools_lava = 1, slippery = 3, not_in_creative_inventory = 1},
+	drop = "aurum_base:ice",
+})
+
+doc.add_entry_alias("nodes", "aurum_base:ice", "nodes", "aurum_base:cave_ice")
+
 minetest.register_node("aurum_base:foundation", {
 	description = S("Foundation"),
 	_doc_items_longdesc = S"Some speak of the 'Foundations of the World'. Here they are.",
