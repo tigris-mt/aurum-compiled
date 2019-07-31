@@ -6,7 +6,7 @@
 	* NPC
 
 # Extended Gameplay
-* Dye
+* Sources for all dye
 * Moreblocks or similiar
 * Doors
 * Flight
