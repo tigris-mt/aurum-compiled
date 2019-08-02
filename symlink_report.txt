@@ -17,6 +17,8 @@ mods/items/aurum_base/textures/default_river_water_flowing_animated.png -> ../..
 mods/items/aurum_base/textures/default_river_water_source_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_river_water_source_animated.png
 mods/items/aurum_base/textures/default_water_flowing_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_water_flowing_animated.png
 mods/items/aurum_base/textures/default_water_source_animated.png -> ../../../../submodules/minetest_game/mods/default/textures/default_water_source_animated.png
+mods/items/aurum_books/textures/default_book.png -> ../../../../submodules/minetest_game/mods/default/textures/default_book.png
+mods/items/aurum_books/textures/default_book_written.png -> ../../../../submodules/minetest_game/mods/default/textures/default_book_written.png
 mods/items/aurum_cook/textures/default_furnace_fire_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_bg.png
 mods/items/aurum_cook/textures/default_furnace_fire_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_fg.png
 mods/items/aurum_tools/textures/wieldhand.png -> ../../../../submodules/minetest_game/mods/default/textures/wieldhand.png
