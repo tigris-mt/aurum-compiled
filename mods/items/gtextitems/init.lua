@@ -1,10 +1,26 @@
 local S = minetest.get_translator()
 local F = minetest.formspec_escape
 
+local has_doc = minetest.get_modpath("doc_items")
+
 gtextitems = {}
 
 gtextitems.GROUP_BLANK = 1
 gtextitems.GROUP_WRITTEN = 2
+
+if has_doc then
+	doc.sub.items.register_factoid(nil, "use", function(itemstring, def)
+		local ret = {}
+		local g = minetest.get_item_group(itemstring, "gtextitem")
+		if g > 0 then
+			table.insert(ret, S"This item can be written in when used (punched with).")
+			if g == gtextitems.GROUP_WRITTEN then
+				table.insert(ret, S("It can be copied by crafting with another empty @1.", minetest.registered_items[def._gtextitems_def.itemname].description))
+			end
+		end
+		return table.concat(ret, "\n")
+	end)
+end
 
 function gtextitems.on_use(stack, player)
 	local playername = player:get_player_name()
@@ -21,7 +37,8 @@ function gtextitems.on_use(stack, player)
 	.. "field_close_on_enter[title;false]"
 	.. ("textarea[0.1,1.2;7.8,6;text;%s;%s]"):format(F(S"Text:"), F(gtm.text))
 	.. "field_close_on_enter[text;false]"
-	.. ("button_exit[3.5,7.4;1,0.5;save;%s]"):format(F(S"Write"))
+	.. ((minetest.get_item_group(stack:get_name(), "gtextitem") == gtextitems.GROUP_BLANK) and "" or ("label[0.1,7.5;%s]"):format(F(S("Last written by @1", gtm.author))))
+	.. ("button_exit[6.75,7.4;1,0.5;save;%s]"):format(F(S"Write"))
 
 	minetest.show_formspec(playername, "gtextitems:formspec", formspec)
 	return stack
@@ -106,4 +123,41 @@ function gtextitems.register(name, def)
 
 	minetest.register_craftitem(def.itemname, def.item)
 	minetest.register_craftitem(def.writtenname, table.combine(def.item, def.written))
+
+	minetest.register_craft{
+		output = def.writtenname,
+		type = "shapeless",
+		recipe = {def.itemname, def.writtenname},
+	}
+
+	minetest.register_on_craft(function(stack, player, old_grid, craft_inv)
+		if stack:get_name() ~= def.writtenname then
+			return
+		end
+
+		for i=1,craft_inv:get_size("craft") do
+			if old_grid[i]:get_name() == def.writtenname then
+				stack = gtextitems.set_item(stack, gtextitems.get_item(old_grid[i]))
+				craft_inv:set_stack("craft", i, old_grid[i])
+				break
+			end
+		end
+
+		return stack
+	end)
+
+	minetest.register_craft_predict(function(stack, player, old_grid, craft_inv)
+		if stack:get_name() ~= def.writtenname then
+			return
+		end
+
+		for i=1,craft_inv:get_size("craft") do
+			if old_grid[i]:get_name() == def.writtenname then
+				stack = gtextitems.set_item(stack, gtextitems.get_item(old_grid[i]))
+				break
+			end
+		end
+
+		return stack
+	end)
 end
