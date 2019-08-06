@@ -12,6 +12,7 @@ local function make_headstone(pos)
 				{S"battle", 1},
 				{S"magical battle", 0.25},
 				{S"a lightning strike", 0.01},
+				{S"a simultaneous lightning strike and cobra bite", 0.001},
 				{S"corruption from the Loom", 1},
 				{S"wild animals", 1},
 				{S"a murderer", 1},
@@ -26,6 +27,8 @@ local function make_headstone(pos)
 				{S"paranoia", 0.25},
 				{S"a magical mishap", 0.25},
 				{S"divine judgement", 0.1},
+				{S"their lack of immortality", 0.1},
+				{S"their great pride", 0.25},
 			},
 			aurum.weighted_choice{
 				{S"quickly", 1},
@@ -42,6 +45,7 @@ local function make_headstone(pos)
 				{S"joyfully", 1},
 				{S"solemnly", 1},
 				{S"gently", 1},
+				{S"as if they were my own child", 0.01},
 			},
 			aurum.weighted_choice{
 				{S"humble", 1},
@@ -70,6 +74,8 @@ local function make_headstone(pos)
 				{S"a true warrior", 1},
 				{S"lazy", 1},
 				{S"a coward", 1},
+				{S"one who killed others", 1},
+				{S"sadistic", 1},
 			},
 			name
 		),
@@ -92,7 +98,7 @@ minetest.register_decoration{
 	place_on = {"group:soil", "aurum_base:gravel", "aurum_base:sand", "aurum_base:snow"},
 	sidelen = 16,
 	noise_params = {
-		offset = -0.099,
+		offset = -0.095,
 		scale = 0.1,
 		spread = vector.new(150, 150, 150),
 		seed = 537,
