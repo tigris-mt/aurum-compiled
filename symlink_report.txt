@@ -1,10 +1,11 @@
 menu/background.1.png -> ../screenshots/loom_overview.0.24.0.png
 menu/background.2.png -> ../screenshots/aurum_biome_junction.0.15.1.png
-menu/background.3.png -> ../screenshots/loom_crystal_forest.0.20.0.png
-menu/background.4.png -> ../screenshots/aurum_forest_border.0.10.0.png
-menu/background.5.png -> ../screenshots/aurum_jungle_log.0.21.1.png
-menu/background.6.png -> ../screenshots/loom_forest_mountain.0.14.0.png
-menu/background.7.png -> ../screenshots/aurum_frozen_forest.0.18.1.png
+menu/background.3.png -> ../screenshots/primus_jungle.0.26.0.png
+menu/background.4.png -> ../screenshots/loom_crystal_forest.0.20.0.png
+menu/background.5.png -> ../screenshots/aurum_forest_border.0.10.0.png
+menu/background.6.png -> ../screenshots/aurum_jungle_log.0.21.1.png
+menu/background.7.png -> ../screenshots/loom_forest_mountain.0.14.0.png
+menu/background.8.png -> ../screenshots/aurum_frozen_forest.0.18.1.png
 menu/background.png -> ../screenshots/aurum_graveyard.0.23.2.png
 menu/icon.png -> ../mods/items/aurum_scrolls/textures/aurum_scrolls_scroll_full.png
 mods/core/aurum/sounds -> ../../../submodules/minetest_game/mods/default/sounds
