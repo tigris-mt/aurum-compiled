@@ -40,7 +40,15 @@ function aurum.ore.register(name, def)
 
 		-- Override for the ore node registration def.
 		ore_override = {},
+
+		-- Override for ore generation.
+		oregen_default_override = {},
+
+		-- Oregen override for each realm.
+		oregen_realm_override = {},
 	}, def)
+
+	aurum.ore.ores[name] = def
 
 	if def.ingot then
 		minetest.register_craftitem(":" .. def.ingot, {
@@ -94,43 +102,48 @@ function aurum.ore.register(name, def)
 		end
 
 		for _,realmid in ipairs(def.realms) do
-			local realm = aurum.realms.get(realmid)
-			local biomes = assert(aurum.biomes.realms[realmid])
-
-			local combined = b.t.icombine({def.depth}, def.growths)
-			for index,depth in ipairs(combined) do
-
-				local nextdepth = combined[index + 1] or realm.global_box.a.y
-
-				local d = {
-					biomes = biomes,
-					ore_type = "scatter",
-					ore = def.ore,
-					wherein = realm.biome_default.node_stone,
-					clust_scarcity = math.floor(math.pow(def.rarity, 3) + 0.5),
-					clust_num_ores = def.num,
-					clust_size = math.floor(def.size + 0.5),
-					y_max = depth + realm.y,
-					y_min = nextdepth,
-				}
-
-				if index == 1 then
-					minetest.register_ore(d)
-				else
-					local m = index - 1
-
-					minetest.register_ore(b.t.combine(d, {
-						clust_scarcity = math.floor(math.pow(def.rarity / (1 + m / 10), 3) + 0.5),
-						clust_num_ores = math.floor(def.num * (1 + m / 10) + 0.5),
-						clust_size = math.floor(def.size * (1 + m / 10) + 0.5),
-						y_max = depth + realm.y,
-					}))
-				end
-			end
+			aurum.ore.register_generation(name, realmid, b.t.combine(def.oregen_default_override, def.oregen_realm_override[realmid] or {}))
 		end
 	end
+end
 
-	aurum.ore.ores[name] = def
+function aurum.ore.register_generation(name, realmid, override)
+	local def = aurum.ore.ores[name]
+	assert(def.ore)
+
+	local realm = aurum.realms.get(realmid)
+	local biomes = assert(aurum.biomes.realms[realmid])
+
+	local combined = b.t.icombine({def.depth}, def.growths)
+	for index,depth in ipairs(combined) do
+
+		local nextdepth = combined[index + 1] or realm.global_box.a.y
+
+		local d = b.t.combine({
+			biomes = biomes,
+			ore_type = "scatter",
+			ore = def.ore,
+			wherein = realm.biome_default.node_stone,
+			clust_scarcity = math.floor(math.pow(def.rarity, 3) + 0.5),
+			clust_num_ores = def.num,
+			clust_size = math.floor(def.size + 0.5),
+			y_max = depth + realm.y,
+			y_min = nextdepth,
+		}, override or {})
+
+		if index == 1 then
+			minetest.register_ore(d)
+		else
+			local m = index - 1
+
+			minetest.register_ore(b.t.combine(d, {
+				clust_scarcity = math.floor(math.pow(def.rarity / (1 + m / 10), 3) + 0.5),
+				clust_num_ores = math.floor(def.num * (1 + m / 10) + 0.5),
+				clust_size = math.floor(def.size * (1 + m / 10) + 0.5),
+				y_max = depth + realm.y,
+			}))
+		end
+	end
 end
 
 b.dofile("mana_beans.lua")
