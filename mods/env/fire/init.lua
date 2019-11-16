@@ -1,6 +1,11 @@
+-- fire/init.lua
+
 -- Global namespace for functions
 
 fire = {}
+
+-- Load support for MT game translation.
+local S = minetest.get_translator("fire")
 
 local creative_exists = minetest.global_exists("creative")
 
@@ -84,7 +89,7 @@ minetest.register_node("fire:basic_flame", {
 })
 
 minetest.register_node("fire:permanent_flame", {
-	description = "Permanent Flame",
+	description = S("Permanent Flame"),
 	drawtype = "firelike",
 	tiles = {
 		{
@@ -115,7 +120,7 @@ minetest.register_node("fire:permanent_flame", {
 -- Flint and steel
 
 minetest.register_tool("fire:flint_and_steel", {
-	description = "Flint and Steel",
+	description = S("Flint and Steel"),
 	inventory_image = "fire_flint_steel.png",
 
 	_doc_items_usagehelp = "Punch a flammable node to ignite it.",
@@ -282,6 +287,9 @@ end
 function fire.update_sounds_around(pos)
 end
 
+-- Called when fire spreads to a position. Override in other mods.
+function fire.on_spread(pos)
+end
 
 --
 -- ABMs
@@ -302,6 +310,7 @@ if fire_enabled then
 			local p = minetest.find_node_near(pos, 1, {"air"})
 			if p then
 				minetest.set_node(p, {name = "fire:basic_flame"})
+				fire.on_spread(p)
 			end
 		end,
 	})
