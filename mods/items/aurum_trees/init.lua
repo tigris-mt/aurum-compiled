@@ -1,4 +1,6 @@
 local S = minetest.get_translator()
+-- Schematic parameter delimiter.
+local SCHEMATIC_DELIM = ","
 local m = {}
 aurum.trees = m
 
@@ -28,6 +30,18 @@ m.default_log_decorations = {
 	["log,24,7"] = 0.005,
 }
 
+-- Map names to more generic schematics.
+m.translation = {
+	simple = "tree,5,2",
+	wide = "tree,6,4,0.3,0.25",
+	tall = "tree,8,2",
+	very_tall = "tree,14,5",
+	huge = "tree,14,7",
+	giant = "tree,26,12",
+	double = "tree,7,5",
+}
+
+-- Default decorations include both trees and logs.
 m.default_decorations = b.t.combine(m.default_tree_decorations, m.default_log_decorations)
 
 local function remove_force_place(schematic)
@@ -40,16 +54,21 @@ end
 
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 
+-- Returns a decoration for tree according to decoration schematic n.
 function aurum.trees.generate_decoration(tree, n)
 	local t_begin = minetest.get_us_time()
 
-	local split = n:split(",", true)
+	n = m.translation[n] or n
+
+	-- Split up decoration name by delimiter.
+	local split = n:split(SCHEMATIC_DELIM, true)
 	local name = split[1]
 	local params = {}
 	for i=2,#split do
 		table.insert(params, split[i])
 	end
 
+	-- Execute decoration schematic generator according to def and params.
 	local schematic, offset = dofile(modpath .. "/decorations/" .. name .. ".lua")(m.types[tree], unpack(params))
 	offset = offset or 0
 
@@ -67,6 +86,7 @@ function aurum.trees.generate_decoration(tree, n)
 	}
 end
 
+-- Add decoration schematic n to tree's default.
 local function add_decoration(tree, n)
 	m.types[tree].decodefs[n] = aurum.trees.generate_decoration(tree, n)
 end
@@ -84,8 +104,10 @@ function m.register(name, def)
 		-- Translator.
 		S = S,
 
-		-- Leafdecay distance.
-		leafdecay = 4,
+		-- Distance leaves can be from the trunk.
+		leafdistance = 4,
+		-- Shall leaves decay?
+		leafdecay = true,
 
 		-- Growth terrain.
 		terrain = {"group:soil"},
@@ -149,10 +171,12 @@ function m.register(name, def)
 		groups = {dig_chop = 3, wood = 1, flammable = 1},
 	})
 
-	minetest.register_craft{
-		output = def.planks .. " 4",
-		recipe = {{def.trunk}},
-	}
+	if def.planks and def.trunk then
+		minetest.register_craft{
+			output = def.planks .. " 4",
+			recipe = {{def.trunk}},
+		}
+	end
 
 	subnode("sapling", {
 		description = S"Sapling",
@@ -221,8 +245,7 @@ function m.register(name, def)
 		drawtype = "allfaces_optional",
 		waving = 2,
 		paramtype = "light",
-		place_param2 = 1,
-		groups = {dig_snap = 3, leaves = 1, flammable = 1, leafdecay = def.leafdecay},
+		groups = {dig_snap = 3, leaves = 1, flammable = 1},
 
 		drop = {
 			max_items = 1,
@@ -239,6 +262,10 @@ function m.register(name, def)
 		walkable = false,
 		climbable = true,
 	} or {}))
+
+	if def.leafdecay and def.trunk and def.leaves then
+		aurum.trees.leafdecay.register(def)
+	end
 
 	m.types[name] = def
 
@@ -293,7 +320,8 @@ doc.sub.items.register_factoid("nodes", "use", function(itemstring, def)
 	return ""
 end)
 
+b.dofile("leafdecay.lua")
+
 b.dofile("decorations/init.lua")
 b.dofile("default_trees.lua")
 b.dofile("fuel.lua")
-b.dofile("leafdecay.lua")
