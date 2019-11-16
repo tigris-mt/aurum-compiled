@@ -29,14 +29,22 @@ sfinv.override_page("sfinv:crafting", {
 local form = smartfs.create("aurum_player:equipment", function(state)
     state:size(8, 6)
 
+	local inventories = ""
+	local listrings = ""
 	local function i(x, y, n)
-		state:inventory(x, y, 1, 1, n)
-		state:element("code", {name = "listring_" .. n, code = "listring[current_player;" .. n .. "]listring[current_player;main]"})
+		inventories = inventories .. "list[current_player;" .. n .. ";" .. x .. "," .. y .. ";1,1]"
+		listrings = listrings .. "listring[current_player;main]listring[current_player;" .. n .. "]"
 	end
-	i(3.5, 0, "gequip_head")
-	i(3.5, 1, "gequip_chest")
-	i(3.5, 2, "gequip_legs")
-	i(3.5, 3, "gequip_feet")
+
+	-- Invisible delegate inventory.
+	-- Must be first inventory in the listring.
+	i(-2, -2, gequip.DELEGATE)
+	i(3.5, 0, gequip.types["head"].list_name)
+	i(3.5, 1, gequip.types["chest"].list_name)
+	i(3.5, 2, gequip.types["legs"].list_name)
+	i(3.5, 3, gequip.types["feet"].list_name)
+
+	state:element("code", {name = "listrings", code = inventories .. "\n" .. listrings})
 
 	local function g(n)
 		return S(n .. ": @1%", 100 - minetest.get_player_by_name(state.location.player):get_armor_groups()[n])
