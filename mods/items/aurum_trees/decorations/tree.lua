@@ -17,15 +17,17 @@ return function(def, height, radius, trunk_radius_ratio, leaf_height_ratio, leaf
 	local area = aurum.box.voxelarea(aurum.box.new(vector.new(0, 0, 0), limit))
 	local data = {}
 
+	local ignore = {name = "ignore"}
 	for i in area:iterp(vector.new(0, 0, 0), limit) do
-		data[i] = {name = "ignore"}
+		data[i] = ignore
 	end
 
-	for y=0,limit.y do
-		for x=0,limit.x do
-			for z=0,limit.z do
+	for x=0,limit.x do
+		local dist_x = math.pow(x - limit.x / 2, 2)
+		for z=0,limit.z do
+			local dist = math.sqrt(dist_x + math.pow(z - limit.z / 2, 2))
+			for y=0,limit.y do
 				local i = area:index(x, y, z)
-				local dist = math.sqrt(math.pow(x - limit.x / 2, 2) + math.pow(z - limit.z / 2, 2))
 				if dist < trunk_radius and y < limit.y then
 					data[i] = t
 				elseif y - depth > (height * leaf_height_ratio) and dist < trunk_radius + def.leafdistance and dist < trunk_radius + leaf_extent then
