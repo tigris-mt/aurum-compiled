@@ -12,8 +12,9 @@ return function(def, overall, trunk_ratio, width_ratio)
 	local area = aurum.box.voxelarea(aurum.box.new(vector.new(0, 0, 0), limit))
 	local data = {}
 
+	local ignore = {name = "ignore"}
 	for i in area:iterp(vector.new(0, 0, 0), limit) do
-		data[i] = {name = "ignore"}
+		data[i] = ignore
 	end
 
 	local leaf_stop = math.floor(3 + overall / 4 + 3)
@@ -30,9 +31,10 @@ return function(def, overall, trunk_ratio, width_ratio)
 
 			local ss = math.max(x_end - x_start, z_end - z_start)
 			for x=x_start,x_end,1 do
+				local dist_x = math.pow(x - limit.x / 2, 2)
 				for z=z_start,z_end,1 do
 					local i = area:index(x, y, z)
-					local dist = math.sqrt(math.pow(x - limit.x / 2, 2) + math.pow(z - limit.z / 2, 2))
+					local dist = math.sqrt(dist_x + math.pow(z - limit.z / 2, 2))
 					if y >= leaf_stop and dist < ss / 4 * trunk_ratio + def.leafdistance then
 						data[i] = l
 					end
