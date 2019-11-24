@@ -10,20 +10,46 @@ aurum.mobs.shortcuts = {}
 
 local uids = storage:get_int("uids")
 
+local old = gemai.ref_to_table
+function gemai.ref_to_table(obj)
+	if obj:get_luaentity() and obj:get_luaentity()._aurum_mobs_id then
+		return {type = "aurum_mob", id = obj:get_luaentity()._aurum_mobs_id}
+	else
+		return old(obj)
+	end
+end
+
 function aurum.mobs.register(name, def)
 	local def = b.t.combine({
+		-- Human readable description.
 		description = "?",
+		-- More information.
+		longdesc = "",
+		-- Initial entity properties.
 		initial_properties = {},
+		-- Initial armor groups.
 		armor_groups = {},
+		-- Initial gemai data.
 		initial_data = {},
+		-- Initial collision and selection box.
 		box = {-0.35, -0.35, -0.35, 0.35, 0.35, 0.35},
 	}, def, {
 		name = name,
 	})
 
 	def.initial_data = b.t.combine({
-		base_speed = 3,
+		-- aurum:mobs_adrenaline
 		adrenaline = 0,
+		adrenaline_time = 10,
+		adrenaline_cooldown = 20,
+		-- aurum.mobs.helper_mob_speed()
+		base_speed = 3,
+		-- Items dropped upon death. Tables or strings, not ItemStacks.
+		drops = {},
+		-- Where does this mob naturally live?
+		habitat_nodes = {},
+		-- Mana released upon death.
+		xmana = 1,
 	}, def.initial_data)
 
 	aurum.mobs.shortcuts[name:sub(name:find(":") + 1, #name)] = name
@@ -42,6 +68,9 @@ function aurum.mobs.register(name, def)
 		_aurum_mob = def,
 
 		_mob_init = function(self)
+		end,
+
+		_mob_death = function(self, killer)
 		end,
 
 		on_activate = function(self, staticdata, dtime)
@@ -105,9 +134,14 @@ function aurum.mobs.register(name, def)
 			self._gemai:step(dtime)
 		end,
 
-		on_death = function(self)
-			self._gemai:fire_event("death", {terminate = true})
-			self._gemai:step(0)
+		on_death = function(self, killer)
+			self:_mob_death(killer)
+			if killer and killer:is_player() then
+				xmana.sparks(self.object:get_pos(), self._gemai.data.xmana, killer:get_player_name())
+			end
+			for _,drop in ipairs(self._gemai.data.drops) do
+				aurum.drop_item(self.object:get_pos(), ItemStack(drop))
+			end
 		end,
 
 		on_punch = function(self, puncher)
@@ -128,6 +162,7 @@ function aurum.mobs.register(name, def)
 	})
 
 	aurum.mobs.mobs[name] = def
+	aurum.mobs.add_doc(name)
 end
 
 function aurum.mobs.spawn(pos, name, data)
@@ -163,3 +198,5 @@ minetest.register_chatcommand("mob_spawn", {
 })
 
 b.dofile("actions.lua")
+b.dofile("doc.lua")
+b.dofile("spawning.lua")
