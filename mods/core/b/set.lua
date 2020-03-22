@@ -36,16 +36,31 @@ function b.set.intersection(...)
 end
 
 -- Get a set with only the entries that are in a single parameter set.
-function b.set.difference(...)
+function b.set.symmetric_difference(...)
 	local r = {}
-	local p = {...}
-	for _,s in ipairs(p) do
+	for _,s in ipairs{...} do
 		for k in b.set.iter(s) do
 			r[k] = (r[k] or 0) + 1
 		end
 	end
 	return b.t.map(r, function(v) return (v == 1) and v or nil end)
 end
+
+-- Get a set with all elements from the first parameter set except those in the following sets.
+function b.set.relative_difference(a, ...)
+	local r = table.copy(a)
+	for _,s in ipairs{...} do
+		for k in b.set.iter(s) do
+			r[k] = nil
+		end
+	end
+	return r
+end
+
+b.set._or = b.set.union
+b.set._and = b.set.intersection
+b.set.xor = b.set.symmetric_difference
+b.set.subtract = b.set.relative_difference
 
 -- Convert a set to an array.
 function b.set.to_array(set)
@@ -54,4 +69,3 @@ end
 
 -- Set iterator, iterates over entries.
 b.set.iter = pairs
-
