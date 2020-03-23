@@ -11,6 +11,7 @@ SAFE="
 	mods/items/bucket
 	mods/items/dye
 	mods/items/gtextitems
+	mods/mapgen/screalms
 	mods/player/gequip
 	mods/player/xmana
 	mods/treasurer/tsm_agnostic_dungeon

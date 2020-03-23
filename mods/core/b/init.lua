@@ -23,3 +23,6 @@ end
 
 b.dofile("table.lua")
 b.dofile("set.lua")
+
+b.dodir("geometry")
+b.dofile("world.lua")

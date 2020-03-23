@@ -1,5 +1,5 @@
 local m = {}
-aurum.realms = m
+screalms = m
 
 local storage = minetest.get_mod_storage()
 local realm_store = storage:get("realms") and minetest.deserialize(storage:get("realms")) or {}
@@ -25,20 +25,20 @@ local function allocate_position(realm)
 	minetest.log("action", "Allocating position for new realm: " .. realm.id)
 
 	-- Loop through all possible positions until a space is found that does not collide.
-	for x=aurum.WORLDA.min.x, aurum.WORLDA.max.x, realm.size.x + m.SPACING do
-		for z=aurum.WORLDA.min.z, aurum.WORLDA.max.z, realm.size.z + m.SPACING do
+	for x=b.WORLDA.min.x, b.WORLDA.max.x, realm.size.x + m.SPACING do
+		for z=b.WORLDA.min.z, b.WORLDA.max.z, realm.size.z + m.SPACING do
 			local corner = vector.new(x, realm.y - realm.size.y / 2, z)
-			local box = aurum.box.new(corner, vector.add(corner, realm.size))
+			local box = b.box.new(corner, vector.add(corner, realm.size))
 
 			-- Ensure within world.
-			local ok = aurum.box.inside_box(box, aurum.WORLDA.box)
+			local ok = b.box.inside_box(box, b.WORLDA.box)
 
 			if ok then
 				-- For all stored realms...
 				for _,store in pairs(realm_store) do
 					-- If this potential position collides with the stored realm.
-					local otherbox = aurum.box.new(store.corner, vector.add(store.corner, store.size))
-					if aurum.box.collide_box(box, otherbox) then
+					local otherbox = b.box.new(store.corner, vector.add(store.corner, store.size))
+					if b.box.collide_box(box, otherbox) then
 						-- Skip this position.
 						ok = false
 						break
@@ -99,9 +99,13 @@ function m.register(id, def)
 		-- Realm Y location.
 		y = 0,
 
+		-- Realm limits nodes.
+		limit_top = "aurum_base:limit",
+		limit_bottom = "aurum_base:foundation",
+
 		-- Apply client-side appearances.
 		apply_player = function(player)
-			aurum.realms.check_underground(player, -100, function()
+			m.check_underground(player, -100, function()
 				player:set_sky(0, "plain", {})
 				player:set_clouds{density = 0}
 			end)
@@ -138,10 +142,10 @@ function m.register(id, def)
 	r.global_center = vector.add(r.global_corner, r.center)
 
 	-- Local bounding box.
-	r.local_box = aurum.box.new(vector.multiply(r.center, -1), r.center)
+	r.local_box = b.box.new(vector.multiply(r.center, -1), r.center)
 
 	-- Global bounding box.
-	r.global_box = aurum.box.new(r.global_corner, vector.add(r.global_corner, r.size))
+	r.global_box = b.box.new(r.global_corner, vector.add(r.global_corner, r.size))
 
 	minetest.log("action", ("Registered realm (%s) centered at %s, size %s"):format(id, minetest.pos_to_string(r.global_center), minetest.pos_to_string(r.size)))
 
@@ -162,20 +166,20 @@ function m.get(id)
 end
 
 -- Get position within realm.
-function aurum.rpos(realm_id, global_pos)
+function m.rpos(realm_id, global_pos)
 	return vector.subtract(global_pos, realms[realm_id].global_center)
 end
 
 -- Get global position from realm.
-function aurum.gpos(realm_id, realm_pos)
+function m.gpos(realm_id, realm_pos)
 	return vector.add(realms[realm_id].global_center, realm_pos)
 end
 
 -- Checks which realm a point is in.
 -- Returns realm id or nil
-function aurum.pos_to_realm(global_pos)
+function m.pos_to_realm(global_pos)
 	for id,realm in pairs(realms) do
-		if aurum.box.collide_point(realm.global_box, global_pos) then
+		if b.box.collide_point(realm.global_box, global_pos) then
 			return id
 		end
 	end
@@ -183,9 +187,9 @@ end
 
 -- Checks which realm a box is colliding with. Does not support multiple collisions.
 -- Returns realm id or nil.
-function aurum.box_to_realm(global_box)
+function m.box_to_realm(global_box)
 	for id,realm in pairs(realms) do
-		if aurum.box.collide_box(realm.global_box, global_box) then
+		if b.box.collide_box(realm.global_box, global_box) then
 			return id
 		end
 	end
@@ -194,7 +198,7 @@ end
 -- Generate the realm border.
 minetest.register_on_generated(function(minp, maxp, seed)
 	-- Check if any part of the block is in a realm.
-	local realm = aurum.box_to_realm(aurum.box.new(minp, maxp))
+	local realm = b.box_to_realm(b.box.new(minp, maxp))
 
 	-- If not within a realm, then we don't need to generate the border.
 	if not realm then
@@ -210,7 +214,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 	local center = vector.divide(vector.add(emin, emax), 2)
 
-	local c_border = minetest.get_content_id((maxp.y > 0) and "aurum_base:limit" or "aurum_base:foundation")
+	local c_border = minetest.get_content_id((maxp.y > 0) and realm.limit_top or realm.limit_bottom)
 
 	for _,axis in ipairs{"x", "y", "z"} do
 		local sign = math.sign(center[axis] - realm.global_center[axis])
@@ -235,6 +239,4 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	vm:write_to_map()
 end)
 
-b.dofile("default_realms.lua")
-b.dofile("spawn.lua")
 b.dofile("check_underground.lua")
