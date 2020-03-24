@@ -100,6 +100,10 @@ function b.t.shuffled(t)
 	return ret
 end
 
+function b.t.choice(t)
+	return t[math.random(#t)]
+end
+
 -- Select a random, weighted choice.
 -- Input is in the form: {{<value>, <relative weight>}, {<another value>, <its relative weight>}}
 function b.t.weighted_choice(t)
