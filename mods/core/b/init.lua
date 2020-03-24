@@ -21,6 +21,7 @@ b.dodir = function(path)
 	end
 end
 
+b.dofile("cache.lua")
 b.dofile("table.lua")
 b.dofile("set.lua")
 
