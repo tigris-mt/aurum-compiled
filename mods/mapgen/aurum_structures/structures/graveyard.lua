@@ -3,15 +3,17 @@ local S = minetest.get_translator()
 local function make_headstone(pos)
 	local name = aurum.flavor.generate_name()
 	local age = math.random(16, 110)
-	if age > 50 then
-		age = age - math.max(0, math.random(-30, 30))
+	for _=1,4 do
+		if age > 50 then
+			age = age - math.max(0, math.random(-30, 35))
+		end
 	end
 	gtextitems.set_node(pos, {
 		title = S("Grave of @1", name),
 		text = S("They lived @1 years before @2 took them. I buried them @3. In life, they were @4. That is all I know.\n\nRequiescat in pace, @5.",
 			age,
 			b.t.weighted_choice{
-				{(age > 70) and S"old age" or S"sudden disease", 5},
+				{(age > 60) and S"old age" or S"sudden disease", age / 70 * 5},
 				{S"battle", 1},
 				{S"magical battle", 0.25},
 				{S"a lightning strike", 0.01},
@@ -19,6 +21,7 @@ local function make_headstone(pos)
 				{S"corruption from the Loom", 1},
 				{S"wild animals", 1},
 				{S"a murderer", 1},
+				{S"a gang of murderers", 0.1},
 				{S"monsters", 1},
 				{S"an accident", 1},
 				{S"disease", 1},
@@ -32,6 +35,9 @@ local function make_headstone(pos)
 				{S"divine judgement", 0.1},
 				{S"their lack of immortality", 0.1},
 				{S"their great pride", 0.25},
+				{S"extreme sport", 0.5},
+				{S"fire", 0.5},
+				{S"five tall men", 0.05},
 			},
 			b.t.weighted_choice{
 				{S"quickly", 1},
@@ -49,6 +55,11 @@ local function make_headstone(pos)
 				{S"solemnly", 1},
 				{S"gently", 1},
 				{S"as if they were my own child", 0.01},
+				{S"with family", 1},
+				{S"while people watched", 1},
+				{S"with nobody around", 1},
+				{S"under the watchful night", 1},
+				{S"in the uncaring earth", 1},
 			},
 			b.t.weighted_choice{
 				{S"humble", 1},
@@ -79,6 +90,13 @@ local function make_headstone(pos)
 				{S"a coward", 1},
 				{S"one who killed others", 1},
 				{S"sadistic", 1},
+				{S"remarkable", 1},
+				{S"glorious", 1},
+				{S"sickly", 1},
+				{S"mundane", 1},
+				{S"glamorous", 1},
+				{S"attractive", 1},
+				{S"one of five tall men", 0.05},
 			},
 			name
 		),
