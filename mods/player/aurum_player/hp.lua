@@ -9,7 +9,7 @@ aurum.player.hp_max_monoid = player_monoids.make_monoid{
         return a * b
     end,
     fold = function(tab)
-        local r = c_max
+        local r = aurum.player.default_hp_max
         for _,v in pairs(tab) do
             r = r * v
         end
@@ -17,6 +17,9 @@ aurum.player.hp_max_monoid = player_monoids.make_monoid{
     end,
     identity = aurum.player.default_hp_max,
     apply = function(n, player)
+		if n < player:get_hp() then
+			player:set_hp(n)
+		end
         player:set_properties{hp_max = n}
     end,
     on_change = function() return end,
@@ -42,11 +45,13 @@ doc.sub.items.register_factoid("nodes", "damage", function(itemstring, def)
 end)
 
 minetest.register_on_player_hpchange(function(player, hp_change, reason)
+	-- For fall and drown damage, reduce by the corresponding armor group.
 	if reason.type == "fall" or reason.type == "drown" then
 		return hp_change * aurum.player.hp_max_scaling * player:get_armor_groups()[reason.type] / 100
+	-- For node damage, check for _damage_type in the node definition to use as the armor group, otherwise just use the passed damage.
 	elseif reason.type == "node_damage" then
 		local def = minetest.registered_nodes[reason.node]
-		return def._damage_type and hp_change * player:get_armor_groups()[def._damage_type] / 100 or hp_change
+		return hp_change * player:get_armor_groups()[def._damage_type or "generic"] / 100
 	else
 		return hp_change
 	end

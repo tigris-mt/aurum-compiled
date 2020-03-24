@@ -1,10 +1,11 @@
-aurum.box = {}
+local m = {}
+b.box = m
 
 -- Returns true if box a and box b have collided.
-function aurum.box.collide_box(a, b)
+function m.collide_box(a, b)
     local e = {
-        a = aurum.box.extremes(a),
-        b = aurum.box.extremes(b),
+        a = m.extremes(a),
+        b = m.extremes(b),
     }
 
     local function beyond(axis)
@@ -30,10 +31,10 @@ function aurum.box.collide_box(a, b)
 end
 
 -- Returns true if <inner> is inside <outer>.
-function aurum.box.inside_box(inner, outer)
+function m.inside_box(inner, outer)
 	local e = {
-        i = aurum.box.extremes(inner),
-        o = aurum.box.extremes(outer),
+        i = m.extremes(inner),
+        o = m.extremes(outer),
     }
 
 	for _,axis in ipairs({"x", "y", "z"}) do
@@ -46,51 +47,51 @@ function aurum.box.inside_box(inner, outer)
 end
 
 -- Check if <point> collides with <box>.
-function aurum.box.collide_point(box, point)
-	return aurum.box.collide_box(box, aurum.box.new(point, point))
+function m.collide_point(box, point)
+	return m.collide_box(box, m.new(point, point))
 end
 
 -- Get the extremes of the box.
-function aurum.box.extremes(box)
+function m.extremes(box)
 	local min, max = vector.sort(box.a, box.b)
-	return aurum.box.new(min, max)
+	return m.new(min, max)
 end
 
 -- Get the box translated to a position
-function aurum.box.translate(box, pos)
-	return aurum.box.new(vector.add(box.a, pos), vector.add(box.b, pos))
+function m.translate(box, pos)
+	return m.new(vector.add(box.a, pos), vector.add(box.b, pos))
 end
 
 -- From corners.
-function aurum.box.new(a, b)
+function m.new(a, b)
 	return {a = a, b = b}
 end
 
 -- From addition.
-function aurum.box.new_add(a, b)
-	return aurum.box.new(a, vector.add(a, b))
+function m.new_add(a, b)
+	return m.new(a, vector.add(a, b))
 end
 
 -- From entity collision box.
-function aurum.box.new_cbox(box)
-    return aurum.geometry.Box.new(vector.new(box[1], box[2], box[3]), vector.new(box[4], box[5], box[6]))
+function m.new_cbox(box)
+    return b.geometry.Box.new(vector.new(box[1], box[2], box[3]), vector.new(box[4], box[5], box[6]))
 end
 
 -- From radius.
-function aurum.box.new_radius(center, radius)
-	return aurum.box.new(vector.subtract(center, radius), vector.add(center, radius))
+function m.new_radius(center, radius)
+	return m.new(vector.subtract(center, radius), vector.add(center, radius))
 end
 
 -- Convert box to VoxelArea.
-function aurum.box.voxelarea(box)
+function m.voxelarea(box)
 	return VoxelArea:new{MinEdge=box.a, MaxEdge=box.b}
 end
 
 -- Get all positions in the box.
 -- If sort_near is specified, the positions will be sorted in order nearest to sort_near.
-function aurum.box.poses(box, sort_near)
+function m.poses(box, sort_near)
 	local poses = {}
-	local box = aurum.box.extremes(box)
+	local box = m.extremes(box)
 	for x=box.a.x,box.b.x do
 		for y=box.a.y,box.b.y do
 			for z=box.a.z,box.b.z do

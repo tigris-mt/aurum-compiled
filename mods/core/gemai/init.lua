@@ -1,6 +1,7 @@
 gemai = {}
 
 -- Convert object reference to serializable table.
+-- Extend in mods implementing mobs/etc.
 -- Returns nil if unable to convert.
 function gemai.ref_to_table(obj)
 	if obj:is_player() then

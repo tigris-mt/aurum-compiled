@@ -3,7 +3,7 @@ local S = minetest.get_translator()
 -- Get the central spawn point for a realm.
 function aurum.realms.get_spawn(id)
 	-- Start out at 0,0,0.
-	local pos = aurum.gpos(id, vector.new(0, 0, 0))
+	local pos = screalms.gpos(id, vector.new(0, 0, 0))
 	-- Try to get the natural spawn level there.
 	pos = b.t.combine(pos, {y = minetest.get_spawn_level(pos.x, pos.z)})
 
@@ -34,11 +34,11 @@ minetest.register_chatcommand("rteleport", {
 			return false
 		end
 
-		if not aurum.realms.get(param) then
+		if not screalms.get(param) then
 			return false, S"No such realm."
 		end
 
-		aurum.player.teleport_guarantee(player, aurum.box.new_add(aurum.realms.get_spawn(param), vector.new(0, 150, 0)), function(player)
+		aurum.player.teleport_guarantee(player, b.box.new_add(aurum.realms.get_spawn(param), vector.new(0, 150, 0)), function(player)
 			aurum.player.teleport(player, aurum.realms.get_spawn(param))
 		end)
 		return true, S("Teleporting to @1", param)

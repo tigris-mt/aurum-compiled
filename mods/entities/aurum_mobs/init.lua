@@ -1,4 +1,6 @@
 local S = minetest.get_translator()
+local storage = minetest.get_mod_storage()
+
 aurum.mobs = {
 	DEBUG = minetest.settings:get_bool("aurum.mobs.debug", false),
 }
@@ -6,14 +8,51 @@ aurum.mobs = {
 aurum.mobs.mobs = {}
 aurum.mobs.shortcuts = {}
 
+local uids = storage:get_int("uids")
+
+local old = gemai.ref_to_table
+function gemai.ref_to_table(obj)
+	if obj:get_luaentity() and obj:get_luaentity()._aurum_mobs_id then
+		return {type = "aurum_mob", id = obj:get_luaentity()._aurum_mobs_id}
+	else
+		return old(obj)
+	end
+end
+
 function aurum.mobs.register(name, def)
 	local def = b.t.combine({
+		-- Human readable description.
 		description = "?",
+		-- More information.
+		longdesc = "",
+		-- Initial entity properties.
 		initial_properties = {},
-		box = {-0.4, -0.4, -0.4, 0.4, 0.4, 0.4},
+		-- Initial armor groups.
+		armor_groups = {},
+		-- Initial gemai data.
+		initial_data = {},
+		-- Initial collision and selection box.
+		box = {-0.35, -0.35, -0.35, 0.35, 0.35, 0.35},
 	}, def, {
 		name = name,
 	})
+
+	def.initial_data = b.t.combine({
+		-- aurum:mobs_adrenaline
+		adrenaline = 0,
+		adrenaline_time = 10,
+		adrenaline_cooldown = 20,
+		-- aurum.mobs.helper_mob_speed()
+		base_speed = 3,
+		-- Items dropped upon death. Tables or strings, not ItemStacks.
+		drops = {},
+		-- aurum:mobs_environment
+		node_damage_timer = 0,
+		-- Where does this mob naturally live?
+		habitat_nodes = {},
+		-- Mana released upon death.
+		xmana = 1,
+	}, def.initial_data)
 
 	aurum.mobs.shortcuts[name:sub(name:find(":") + 1, #name)] = name
 
@@ -33,13 +72,22 @@ function aurum.mobs.register(name, def)
 		_mob_init = function(self)
 		end,
 
+		_mob_death = function(self, killer)
+		end,
+
 		on_activate = function(self, staticdata, dtime)
+			uids = uids + 1
+			self._aurum_mobs_id = uids
+			storage:set_int("uids", uids)
+
 			self._data = b.t.combine({
 				initialized = false,
 				gemai = {},
 			}, minetest.deserialize(staticdata) or {})
 
-			self.object:set_armor_groups(gdamage.armor_defaults())
+			self._data.gemai = b.t.combine(def.initial_data, self._data.gemai)
+
+			self.object:set_armor_groups(b.t.combine(gdamage.armor_defaults(), def.armor_groups))
 
 			-- If the entity is new, run initialization.
 			if not self._data.initialized then
@@ -88,14 +136,23 @@ function aurum.mobs.register(name, def)
 			self._gemai:step(dtime)
 		end,
 
-		on_death = function(self)
-			self._gemai:fire_event("death", {terminate = true})
-			self._gemai:step(0)
+		on_death = function(self, killer)
+			self:_mob_death(killer)
+			if killer and killer:is_player() then
+				xmana.sparks(self.object:get_pos(), self._gemai.data.xmana, killer:get_player_name())
+			end
+			for _,drop in ipairs(self._gemai.data.drops) do
+				aurum.drop_item(self.object:get_pos(), ItemStack(drop))
+			end
 		end,
 
 		on_punch = function(self, puncher)
 			self._gemai:fire_event("punch", {
 				other = gemai.ref_to_table(puncher),
+				target = {
+					type = "ref_table",
+					ref_table = gemai.ref_to_table(puncher),
+				},
 			})
 		end,
 
@@ -107,6 +164,7 @@ function aurum.mobs.register(name, def)
 	})
 
 	aurum.mobs.mobs[name] = def
+	aurum.mobs.add_doc(name)
 end
 
 function aurum.mobs.spawn(pos, name, data)
@@ -142,3 +200,5 @@ minetest.register_chatcommand("mob_spawn", {
 })
 
 b.dofile("actions.lua")
+b.dofile("doc.lua")
+b.dofile("spawning.lua")

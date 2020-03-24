@@ -1,12 +1,12 @@
 local S = minetest.get_translator()
 aurum.magic = {}
 
-doc.add_category("spells", {
+doc.add_category("aurum_magic:spells", {
 	name = S"Spells",
 	build_formspec = doc.entry_builders.text,
 })
 
-doc.add_entry("basics", "spells", {
+doc.add_entry("basics", "aurum_magic:spells", {
 	name = S"Spells",
 	data = {
 		text = table.concat({
@@ -17,7 +17,7 @@ doc.add_entry("basics", "spells", {
 	},
 })
 
-doc.add_category("rituals", {
+doc.add_category("aurum_magic:rituals", {
 	name = S"Rituals",
 	build_formspec = function(def)
 		local x = doc.FORMSPEC.ENTRY_START_X
@@ -45,7 +45,7 @@ doc.add_category("rituals", {
 			y = math.min(1, 3 / (total.y + 1), 2.5 / (total.z + 1))
 		}
 
-		for _,pos in ipairs(aurum.box.poses(def.size)) do
+		for _,pos in ipairs(b.box.poses(def.size)) do
 			local rpos = vector.subtract(pos, def.size.a)
 			local hash = minetest.hash_node_position(pos)
 			local node = vector.equals(pos, vector.new(0, 0, 0)) and "aurum_magic:altar" or def.hashed_recipe[hash] or ""
@@ -77,7 +77,7 @@ doc.add_category("rituals", {
 	end,
 })
 
-doc.add_entry("basics", "rituals", {
+doc.add_entry("basics", "aurum_magic:rituals", {
 	name = S"Rituals",
 	data = {
 		text = table.concat({

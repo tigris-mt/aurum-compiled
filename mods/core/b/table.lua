@@ -77,6 +77,17 @@ function b.t.map(t, f)
 	return ret
 end
 
+function b.t.imap(t, f)
+	local ret = {}
+	for i,v in ipairs(t) do
+		local new = f(v, i)
+		if new then
+			table.insert(ret, new)
+		end
+	end
+	return ret
+end
+
 -- Return a shuffled version of an array.
 function b.t.shuffled(t)
 	local ret = {}

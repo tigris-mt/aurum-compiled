@@ -1,25 +1,6 @@
 -- Create aurum global.
 b.dofile("aurum_table.lua")
 
--- Helpful geometric functions.
-b.dofile("geometry/box.lua")
-
--- The world size.
-aurum.WORLD = {
-	min = vector.new(-31000, -31000, -31000),
-	max = vector.new(31000, 31000, 31000),
-}
-
-aurum.WORLD.box = aurum.box.new(aurum.WORLD.min, aurum.WORLD.max)
-
--- The world size, aligned to chunks.
-aurum.WORLDA = {
-	min = vector.new(-30000, -30000, -30000),
-	max = vector.new(30000, 30000, 30000),
-}
-
-aurum.WORLDA.box = aurum.box.new(aurum.WORLDA.min, aurum.WORLDA.max)
-
 -- Gravity acceleration.
 aurum.GRAVITY = vector.new(0, -9.81, 0)
 
@@ -61,6 +42,7 @@ function aurum.in_creative(player)
 end
 
 -- Is pos protected against a player?
+-- Player may be name or objectref.
 -- Quiet option may be respected, for times when the player does not need to be aware of protection.
 function aurum.is_protected(pos, player_or_name, quiet)
 	local name = (type(player_or_name) == "string") and player_or_name or player_or_name:get_player_name()
