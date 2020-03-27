@@ -121,3 +121,12 @@ function b.t.weighted_choice(t)
 		end
 	end
 end
+
+-- Duplicate x n times and return the resulting table. No deep copying done.
+function b.t.duplicate(x, n)
+	local ret = {}
+	for i=1,n do
+		ret[i] = x
+	end
+	return ret
+end
