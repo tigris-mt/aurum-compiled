@@ -130,3 +130,15 @@ function b.t.duplicate(x, n)
 	end
 	return ret
 end
+
+function b.t.deep_copy(t)
+	if type(t) == "table" then
+		local ret = {}
+		for k,v in pairs(t) do
+			ret[k] = b.t.deep_copy(v)
+		end
+		return ret
+	else
+		return t
+	end
+end

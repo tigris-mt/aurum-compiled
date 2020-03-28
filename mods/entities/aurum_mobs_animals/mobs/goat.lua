@@ -1,20 +1,24 @@
 local S = minetest.get_translator()
 
-aurum.mobs.register("aurum_mobs_animals:rat", {
-	description = S"Rat",
-	longdesc = S"A common miniscule mammal that may be considered an annoyance.",
+aurum.mobs.register("aurum_mobs_animals:goat", {
+	description = S"Goat",
+	longdesc = S"A well-known animal, often domesticated for its meat and milk.",
 
 	initial_properties = {
 		visual = "sprite",
-		textures = {"aurum_mobs_animals_rat.png"},
-		visual_size = {x = 0.6, y = 0.6},
+		textures = {"aurum_mobs_animals_goat.png"},
+		visual_size = {x = 1.5, y = 1},
 
-		hp_max = 2,
+		hp_max = 14,
 	},
 
 	initial_data = {
-		habitat_nodes = {"group:stone", "aurum_base:stone_brick", "aurum_base:gravel"},
-		drops = {"aurum_base:stone"},
+		habitat_nodes = {"group:soil"},
+		drops = {"aurum_animals:raw_meat 5", "aurum_animals:bone 6"},
+		xmana = 4,
+		pathfinder = b.t.combine(aurum.mobs.DEFAULT_PATHFINDER, {
+			jump_height = 3,
+		}),
 	},
 
 	gemai = {
@@ -69,7 +73,8 @@ aurum.mobs.register("aurum_mobs_animals:rat", {
 })
 
 aurum.mobs.register_spawn{
-	mob = "aurum_mobs_animals:rat",
-	chance = 2000,
-	biomes = aurum.biomes.get_all_group("aurum:aurum"),
+	mob = "aurum_mobs_animals:goat",
+	chance = 22 ^ 3,
+	biomes = aurum.biomes.get_all_group("green", {"base"}),
 }
+

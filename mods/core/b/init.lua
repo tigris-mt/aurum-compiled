@@ -26,4 +26,5 @@ b.dofile("table.lua")
 b.dofile("set.lua")
 
 b.dodir("geometry")
+b.dodir("pathfinder")
 b.dofile("world.lua")
