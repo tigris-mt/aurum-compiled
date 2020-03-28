@@ -29,6 +29,10 @@ function b.pathfinder.path(def)
 		-- Distance to search.
 		search_distance = 64,
 
+		-- Resolution, lower values mean multiple path points may be in a single node.
+		-- group: resolution
+		resolution = 1,
+
 		-- Maximum height differences to allow.
 		--- group: specify_vertical
 		jump_height = 1,
