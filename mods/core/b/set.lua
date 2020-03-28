@@ -67,5 +67,9 @@ function b.set.to_array(set)
 	return b.t.keys(set)
 end
 
+function b.set.size(set)
+	return #b.set.to_array(set)
+end
+
 -- Set iterator, iterates over entries.
 b.set.iter = pairs

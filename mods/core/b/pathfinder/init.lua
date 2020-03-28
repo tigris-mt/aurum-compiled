@@ -5,6 +5,11 @@ b.pathfinder = {
 function b.pathfinder.register(method, fdef)
 	local fdef = b.t.combine({
 		func = function(def) end,
+		-- Relative expense.
+		-- Starts at 1 for the C++ builtin pathfinder.
+		expense = 1,
+		-- Support groups set.
+		groups = {},
 	}, fdef)
 	b.pathfinder.pathfinders[method] = fdef
 end
@@ -14,23 +19,40 @@ end
 function b.pathfinder.path(def)
 	local def = b.t.combine({
 		-- Pathfinding method. Some methods may not support all features.
-		method = "builtin",
+		-- Use support groups to detect which pathfinder has the features you need.
+		method = "<no method specified>",
 
 		-- Pathfinding endpoints.
-		-- Supported by all pathfinders.
 		from = nil,
 		to = nil,
 
 		-- Distance to search.
-		--- builtin: distance from both endpoints to search
 		search_distance = 64,
 
 		-- Maximum height differences to allow.
-		--- builtin
+		--- group: specify_vertical
 		jump_height = 1,
 		drop_height = 1,
 	}, def)
 
-	local pathfinder = assert(b.pathfinder.pathfinders[def.method])
+	local pathfinder = assert(b.pathfinder.pathfinders[def.method], "no such pathfinder: " .. def.method)
 	return pathfinder.func(def)
+end
+
+-- Get a pathfinder method that supports all the groups in the passed set.
+-- Returns nil if no pathfinder sufficed.
+function b.pathfinder.get_pathfinder(groups)
+	for method,fdef in b.t.spairs(b.pathfinder.pathfinders, function(t, a, b) return t[a].expense < t[b].expense end) do
+		local function acceptable()
+			for group in b.set.iter(groups) do
+				if not fdef.groups[group] then
+					return false
+				end
+			end
+			return true
+		end
+		if acceptable() then
+			return method
+		end
+	end
 end
