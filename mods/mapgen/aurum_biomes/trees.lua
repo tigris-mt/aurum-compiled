@@ -1,23 +1,5 @@
 aurum.biomes.trees = {}
 
-aurum.biomes.trees.HUGE = {
-	custom_schematics = {
-		["tree,32,32"] = 0.01,
-		["tree,48,16"] = 0.1,
-		["tree,16,48"] = 0.001,
-		["cone,16"] = 0.01,
-		["cone,14"] = 0.01,
-		["cone,24"] = 0.001,
-	},
-	post_schematics = {
-		["log,64,8,,-2"] = 0.0025,
-		["tree,64,8"] = 0.025,
-		["tree,72,24"] = 0.01,
-		["tree,144,48"] = 0.001,
-		["log,144,16,,-4"] = 0.001,
-	},
-}
-
 local function sum_rarity(table, keys)
 	local total = 0
 	local keys = keys or b.t.keys(table)
@@ -75,8 +57,8 @@ function aurum.biomes.trees.register(def)
 			rarity = 0.005 * (def.rarity or 1) * rarity / total,
 			biomes = def.biomes,
 			schematic = deco.schematic,
-			on_offset = function(pos)
-				return vector.add(pos, vector.new(0, deco.place_offset_y, 0))
+			on_offset = function(context)
+				return vector.add(context.pos, vector.new(0, deco.place_offset_y, 0))
 			end,
 		}
 	end

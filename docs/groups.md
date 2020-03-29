@@ -32,10 +32,12 @@ Toughless levels range from 0 to 3.
 * `psyche`: Mental/magic.
 
 # Crafting
+* `bone=1`: This item is a type of bone/skeleton.
+* `color_X=1`: This item provides/is color X.
 * `dye=1`: This item is dye.
 * `dye_source=1`: This item is dye source.
 * `equipment=1`: For equipment.
-* `color_X=1`: This item provides/is color X.
+* `raw_meat=1`: Some type of raw flesh.
 * `rod=1`: For rods.
 * `stick=1`: For sticks. The doc modpack semi-requires a stick group.
 * `tool=1`: For tools.
@@ -45,7 +47,7 @@ Toughless levels range from 0 to 3.
 * `book=1`: This node is a paper book.
 * `cook_temp=x`: This node can only be cooked in a cooker with a temperature range including x.
 	* `Smelter`: 10-20
-	* `Flare Box`: 0-10
+	* `Flare Oven`: 0-10
 * `cook_xmana=x`: This node provides up to x mana when smelted.
 * `cools_lava=1`: This node cools lava to aurum_base:stone.
 	* An alternative node can be specified in `_lava_cool_node` in the lava's def.
@@ -67,6 +69,7 @@ Toughless levels range from 0 to 3.
 * `leafdecay=x`: This node will decay and drop items if it is >x nodes away from a group:tree.
 * `leaves=1`: This node is leaves.
 * `liquid=1`: This node is liquid.
+* `ore_block=1`: This is an ore block.
 * `paper=1`: This item is made of paper and can burn.
 * `sand=1`: This node is sand.
 * `sapling=1`: This node is a sapling.

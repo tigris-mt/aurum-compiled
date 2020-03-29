@@ -22,10 +22,15 @@ function aurum.flora.register(name, def)
 	}))
 end
 
+minetest.register_craft{
+	output = "aurum_base:paste 2",
+	recipe = {
+		{"group:flora", "group:flora", "group:flora"},
+		{"group:flora", "group:flora", "group:flora"},
+	},
+}
+
 b.dofile("spreading.lua")
 b.dofile("stack_grow.lua")
 
-b.dofile("cactus.lua")
-b.dofile("flowers.lua")
-b.dofile("papyrus.lua")
-b.dofile("weeds.lua")
+b.dodir("flora")

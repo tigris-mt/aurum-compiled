@@ -8,15 +8,35 @@ screalms.register("aurum:aether", {
 		local x = math.floor((math.sin(minetest.get_gametime() / 100) + 1) / 2 * 127) + 127
 		player:set_sky{
 			sky_color = {
-				day_sky = ("#%x%xfa"):format(x, x),
-				day_horizon = ("#%x%xfa"):format(x, x),
+				day_sky = "#ffffff",
+				day_horizon = "#ffffff",
 			},
 		}
 		player:set_clouds{
 			speed = {x = 0, z = -40},
-			color = ("#%02x%02x00e5"):format(x, x),
+			color = ("#%02x%02xaae5"):format(x, x),
 		}
 		screalms.apply_underground(player)
+	end,
+
+	aurum_dungeon_loot = function(pos)
+		return {
+			count = math.random(1, 2),
+			list = {
+				{
+					count = math.random(1, 2),
+					preciousness = {0, 10},
+					groups = {"magic"},
+				},
+			},
+		}
+	end,
+
+	aurum_dungeon_chest = function(pos)
+		return {
+			node = "aurum_storage:shell_box",
+			list = "main",
+		}
 	end,
 
 	biome_default = {

@@ -1,6 +1,6 @@
 local function v_base(def)
 	return aurum.biomes.v_base(b.t.combine({
-		y_min = -100,
+		y_min = -50,
 		node_water = "air",
 		node_cave_liquid = "air",
 	}, def))
@@ -25,8 +25,11 @@ aurum.biomes.register_all("aurum:primus", {
 aurum.biomes.trees.register(b.t.combine({
 	name = "aurum_trees:pander",
 	biomes = {"primus_jungle"},
-	rarity = 40,
-}, aurum.biomes.trees.HUGE))
+	rarity = 15,
+}, {
+	custom_schematics = aurum.trees.defaults.style.HUGE.pre,
+	post_schematics = aurum.trees.defaults.style.HUGE.post,
+}))
 
 aurum.biomes.register_all("aurum:primus", {
 	name = "primus_forest",
@@ -82,4 +85,7 @@ aurum.biomes.trees.register(b.t.combine({
 	name = "aurum_trees:drywood",
 	biomes = {"primus_dry"},
 	rarity = 5,
-}, aurum.biomes.trees.HUGE))
+}, {
+	custom_schematics = aurum.trees.defaults.style.TALL.pre,
+	post_schematics = aurum.trees.defaults.style.TALL.post,
+}))

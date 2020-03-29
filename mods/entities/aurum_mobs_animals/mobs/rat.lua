@@ -14,7 +14,7 @@ aurum.mobs.register("aurum_mobs_animals:rat", {
 
 	initial_data = {
 		habitat_nodes = {"group:stone", "aurum_base:stone_brick", "aurum_base:gravel"},
-		drops = {"aurum_base:stone"},
+		drops = {"aurum_animals:raw_meat", "aurum_animals:bone"},
 	},
 
 	gemai = {
@@ -28,6 +28,7 @@ aurum.mobs.register("aurum_mobs_animals:rat", {
 			timeout = "roam",
 			punch = "flee",
 			lost = "roam",
+			interact = "",
 		},
 
 		states = {
@@ -44,7 +45,8 @@ aurum.mobs.register("aurum_mobs_animals:rat", {
 				},
 
 				events = {
-					found = "go",
+					found_habitat = "go",
+					found_random = "go",
 				},
 			},
 

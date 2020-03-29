@@ -3,11 +3,7 @@ b.t = {}
 -- Combine tables and return the result. Later tables take priority.
 function b.t.combine(...)
 	local ret = {}
-	for _,t in ipairs({...}) do
-		for k,v in pairs(t) do
-			ret[k] = v
-		end
-	end
+	b.t.merge(ret, ...)
 	return ret
 end
 
@@ -100,6 +96,10 @@ function b.t.shuffled(t)
 	return ret
 end
 
+function b.t.choice(t)
+	return t[math.random(#t)]
+end
+
 -- Select a random, weighted choice.
 -- Input is in the form: {{<value>, <relative weight>}, {<another value>, <its relative weight>}}
 function b.t.weighted_choice(t)
@@ -114,6 +114,35 @@ function b.t.weighted_choice(t)
 		index = index - v[2]
 		if index <= 0 then
 			return v[1]
+		end
+	end
+end
+
+-- Duplicate x n times and return the resulting table. No deep copying done.
+function b.t.duplicate(x, n)
+	local ret = {}
+	for i=1,n do
+		ret[i] = x
+	end
+	return ret
+end
+
+function b.t.deep_copy(t)
+	if type(t) == "table" then
+		local ret = {}
+		for k,v in pairs(t) do
+			ret[k] = b.t.deep_copy(v)
+		end
+		return ret
+	else
+		return t
+	end
+end
+
+function b.t.merge(to, ...)
+	for _,t in ipairs{...} do
+		for k,v in pairs(t) do
+			to[k] = v
 		end
 	end
 end

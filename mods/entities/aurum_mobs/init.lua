@@ -7,6 +7,14 @@ aurum.mobs = {
 
 aurum.mobs.mobs = {}
 aurum.mobs.shortcuts = {}
+aurum.mobs.initial_data = {
+	-- Items dropped upon death. Tables or strings, not ItemStacks.
+	drops = {},
+	-- Where does this mob naturally live?
+	habitat_nodes = {},
+	-- Mana released upon death.
+	xmana = 1,
+}
 
 local uids = storage:get_int("uids")
 
@@ -18,6 +26,18 @@ function gemai.ref_to_table(obj)
 		return old(obj)
 	end
 end
+
+-- For mobs that walk simply.
+aurum.mobs.PATHMETHOD_WALK = b.pathfinder.get_pathfinder(b.set{
+	"specify_vertical",
+})
+
+aurum.mobs.DEFAULT_PATHFINDER = {
+	method = aurum.mobs.PATHMETHOD_WALK,
+	search_distance = 48,
+	jump_height = 2,
+	drop_height = 3,
+}
 
 function aurum.mobs.register(name, def)
 	local def = b.t.combine({
@@ -37,31 +57,14 @@ function aurum.mobs.register(name, def)
 		name = name,
 	})
 
-	def.initial_data = b.t.combine({
-		-- aurum:mobs_adrenaline
-		adrenaline = 0,
-		adrenaline_time = 10,
-		adrenaline_cooldown = 20,
-		-- aurum.mobs.helper_mob_speed()
-		base_speed = 3,
-		-- Items dropped upon death. Tables or strings, not ItemStacks.
-		drops = {},
-		-- aurum:mobs_environment
-		node_damage_timer = 0,
-		-- Where does this mob naturally live?
-		habitat_nodes = {},
-		-- Mana released upon death.
-		xmana = 1,
-	}, def.initial_data)
-
 	aurum.mobs.shortcuts[name:sub(name:find(":") + 1, #name)] = name
 
 	def.gemai = b.t.combine({}, def.gemai or {})
 
 	minetest.register_entity(":" .. name, {
 		initial_properties = b.t.combine({
-			physical = true,
 			hp_max = 1,
+			physical = 1,
 
 			collisionbox = def.box,
 			selectionbox = def.box,
@@ -85,7 +88,7 @@ function aurum.mobs.register(name, def)
 				gemai = {},
 			}, minetest.deserialize(staticdata) or {})
 
-			self._data.gemai = b.t.combine(def.initial_data, self._data.gemai)
+			self._data.gemai = b.t.combine(b.t.deep_copy(b.t.combine(aurum.mobs.initial_data, def.initial_data)), self._data.gemai)
 
 			self.object:set_armor_groups(b.t.combine(gdamage.armor_defaults(), def.armor_groups))
 
@@ -147,13 +150,15 @@ function aurum.mobs.register(name, def)
 		end,
 
 		on_punch = function(self, puncher)
-			self._gemai:fire_event("punch", {
-				other = gemai.ref_to_table(puncher),
-				target = {
-					type = "ref_table",
-					ref_table = gemai.ref_to_table(puncher),
-				},
-			})
+			if puncher ~= self.object then
+				self._gemai:fire_event("punch", {
+					other = gemai.ref_to_table(puncher),
+					target = {
+						type = "ref_table",
+						ref_table = gemai.ref_to_table(puncher),
+					},
+				})
+			end
 		end,
 
 		on_rightclick = function(self, clicker)
@@ -190,7 +195,7 @@ minetest.register_chatcommand("mob_spawn", {
 		if not aurum.mobs.mobs[mob] then
 			return false, S"No such mob."
 		end
-		local obj = aurum.mobs.spawn(player:get_pos(), mob)
+		local obj = aurum.mobs.spawn(vector.add(vector.round(player:get_pos()), vector.new(0, 1, 0)), mob)
 		if obj then
 			return true, S("Spawned @1 (@2).", mob, aurum.mobs.mobs[mob].description)
 		else
@@ -199,6 +204,6 @@ minetest.register_chatcommand("mob_spawn", {
 	end,
 })
 
-b.dofile("actions.lua")
+b.dodir("actions")
 b.dofile("doc.lua")
 b.dofile("spawning.lua")

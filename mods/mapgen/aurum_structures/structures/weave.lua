@@ -14,7 +14,7 @@ local make = b.cache.simple(function(size, sign)
 	local r = math.min(size.x / 2, size.y / 2)
 	for x=0,limit.x,0.1 do
 		-- Use half-circle equation to get y.
-		local y = math.floor(math.sqrt(math.pow(r, 2) - math.pow(x - r, 2)) + 0.5)
+		local y = math.floor(math.sqrt((r ^ 2) - ((x - r) ^ 2)) + 0.5)
 		if sign == -1 then
 			y = math.floor((limit.y / 2) - y + 0.5)
 		end
@@ -34,11 +34,12 @@ aurum.features.register_decoration{
 	rarity = 0.001,
 	biomes = aurum.biomes.get_all_group("aurum:loom", {"base"}),
 
-	make_schematic = function(pos, random)
-		local size = vector.new(random(10, 20), random(10, 30), 1)
-		-- Offset position.
-		pos.y = math.ceil(pos.y - (size.y - 1) / 3)
+	on_offset = function(c)
+		c.weave_size = vector.new(c.random(10, 20), c.random(10, 30), 1)
+		return vector.apply(vector.subtract(c.pos, vector.new(0, (c.weave_size.y - 1) / 3, 0)), math.ceil)
+	end,
 
-		return make(size, (random(0, 1) == 1) and 1 or -1)
+	make_schematic = function(c)
+		return make(c.weave_size, (c.random(0, 1) == 1) and 1 or -1)
 	end,
 }

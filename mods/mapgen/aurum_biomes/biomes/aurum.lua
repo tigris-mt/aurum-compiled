@@ -103,7 +103,7 @@ aurum.biomes.register_all("aurum:aurum", {
 aurum.biomes.trees.register({
 	name = "aurum_trees:pander",
 	biomes = {"aurum_jungle"},
-	rarity = 20,
+	rarity = 5,
 })
 
 -- Desert
@@ -166,7 +166,7 @@ local frozen = {
 
 aurum.biomes.register_all("aurum:aurum", {
 	name = "aurum_frozen",
-	_groups = {"frozen"},
+	_groups = {"frozen", "barren"},
 	heat_point = 0,
 	humidity_point = 70,
 	_variants = {
