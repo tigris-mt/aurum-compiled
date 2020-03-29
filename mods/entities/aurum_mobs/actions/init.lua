@@ -1,32 +1,40 @@
 -- How far should mobs search for objectives?
-aurum.mobs.SEARCH_RADIUS = 12
+aurum.mobs.SEARCH_RADIUS = 32
+
+function aurum.mobs.helper_target_entity(self, target)
+	if target.type == "ref_table" then
+		if target.ref_table.type == "player" then
+			return minetest.get_player_by_name(target.ref_table.id)
+		elseif target.ref_table.type == "aurum_mob" then
+			for _,object in ipairs(minetest.get_objects_inside_radius(self.entity.object:get_pos(), aurum.mobs.SEARCH_RADIUS)) do
+				if object:get_luaentity() and object:get_luaentity()._aurum_mobs_id == target.ref_table.id then
+					return object
+				end
+			end
+		end
+	end
+end
 
 function aurum.mobs.helper_target_pos(self, target)
 	self:assert(target, "invalid target")
 	if target.type == "pos" then
 		return target.pos
 	elseif target.type == "ref_table" then
-		if target.ref_table.type == "player" then
-			local player = minetest.get_player_by_name(target.ref_table.id)
-			return player and player:get_pos()
-		elseif target.ref_table.type == "aurum_mob" then
-			for _,object in ipairs(minetest.get_objects_inside_radius(self.entity.object:get_pos(), aurum.mobs.SEARCH_RADIUS)) do
-				if object:get_luaentity() and object:get_luaentity()._aurum_mobs_id == target.ref_table.id then
-					return object:get_pos()
-				end
-			end
+		local obj = aurum.mobs.helper_target_entity(self, target)
+		if obj then
+			return obj:get_pos()
 		end
 	else
 		self:assert(false, "Invalid target type: " .. target.type)
 	end
 end
 
-function aurum.mobs.helper_find_nodes(self, nodenames)
+function aurum.mobs.helper_find_nodes(self, event, nodenames)
 	local ent = self.entity
 	local box = b.box.new_radius(ent.object:get_pos(), aurum.mobs.SEARCH_RADIUS)
 	local nodes = minetest.find_nodes_in_area_under_air(box.a, box.b, nodenames)
 	if #nodes > 0 then
-		self:fire_event("found", {target = {
+		self:fire_event(event, {target = {
 			type = "pos",
 			pos = nodes[math.random(#nodes)],
 		}})
