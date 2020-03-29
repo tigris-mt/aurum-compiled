@@ -1,6 +1,7 @@
 b.color = {}
 
-b.color.css = {
+b.color.names = {
+	-- CSS
 	aliceblue = "#f0f8ff",
 	antiquewhite = "#faebd7",
 	aqua = "#00ffff",
@@ -149,6 +150,10 @@ b.color.css = {
 	whitesmoke = "#f5f5f5",
 	yellow = "#ffff00",
 	yellowgreen = "#9acd32",
+
+	-- Dye
+	dark_green = "darkgreen",
+	dark_grey = "darkgrey",
 }
 
 -- Converts colorspec into table with keys from 0-255: r g b a
@@ -166,8 +171,8 @@ function b.color.convert(c)
 			b = math.floor(c % 0x100),
 		}
 	elseif type(c) == "string" then
-		if b.color.css[c] then
-			return b.color.convert(b.color.css[c])
+		if b.color.names[c] then
+			return b.color.convert(b.color.names[c])
 		end
 		local function try_match(match, f)
 			if c:match(match) then
@@ -176,7 +181,7 @@ function b.color.convert(c)
 		end
 		local ret
 		ret = ret or try_match("(%a+)#(%x+)", function(name, alpha)
-			return b.t.combine(b.color.convert(b.color.css[name]), {a = tonumber(alpha, 16)})
+			return b.t.combine(b.color.convert(b.color.names[name]), {a = tonumber(alpha, 16)})
 		end)
 		ret = ret or try_match("#(%x%x)(%x%x)(%x%x)(%x%x)", function(r, g, b, a)
 			return {r = tonumber(r, 16), g = tonumber(g, 16), b = tonumber(b, 16), a = tonumber(a, 16)}
@@ -192,4 +197,9 @@ function b.color.convert(c)
 		end)
 		return ret and ret or nil
 	end
+end
+
+function b.color.tostring(c)
+	local c = b.color.convert(c)
+	return c.a and ("#%02x%02x%02x%02x"):format(c.r, c.g, c.b, c.a) or ("#%02x%02x%02x"):format(c.r, c.g, c.b)
 end

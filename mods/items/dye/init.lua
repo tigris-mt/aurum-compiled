@@ -6,21 +6,21 @@ local is_aurum = minetest.get_modpath("aurum")
 -- Make dye names and descriptions available globally
 
 dye.dyes = {
-	{"white",      "White", "#ffffff"},
-	{"grey",       "Grey", "#999999"},
-	{"dark_grey",  "Dark grey", "#333333"},
-	{"black",      "Black", "#000000"},
-	{"violet",     "Violet", "#aa0066"},
-	{"blue",       "Blue", "#0000aa"},
-	{"cyan",       "Cyan", "#00ffff"},
-	{"dark_green", "Dark green", "#009900"},
-	{"green",      "Green", "#00ff00"},
-	{"yellow",     "Yellow", "#ffff00"},
-	{"brown",      "Brown", "#704030"},
-	{"orange",     "Orange", "#ffaa00"},
-	{"red",        "Red", "#ff0000"},
-	{"magenta",    "Magenta", "#ff00ff"},
-	{"pink",       "Pink", "#ff9999"},
+	{"white",      "White"},
+	{"grey",       "Grey"},
+	{"dark_grey",  "Dark grey"},
+	{"black",      "Black"},
+	{"violet",     "Violet"},
+	{"blue",       "Blue"},
+	{"cyan",       "Cyan"},
+	{"dark_green", "Dark green"},
+	{"green",      "Green"},
+	{"yellow",     "Yellow"},
+	{"brown",      "Brown"},
+	{"orange",     "Orange"},
+	{"red",        "Red"},
+	{"magenta",    "Magenta"},
+	{"pink",       "Pink"},
 }
 
 -- Define items
