@@ -85,14 +85,19 @@ aurum.features.register_decoration{
 		"aurum_base:stone",
 		"aurum_base:regret",
 	},
-	rarity = 0.01,
 	biomes = aurum.biomes.get_all_group("all", {"under"}),
+
+	noise_params = {
+		offset = 0,
+		scale = 0.1,
+		spread = vector.new(200, 200, 200),
+		seed = 8402,
+		octaves = 3,
+		persist = 0.5,
+	},
 
 	on_offset = function(c)
 		c.s.biome = b.t.combine({heat = 50, humidity = 50}, minetest.get_biome_data(c.pos) or {})
-		if c.s.biome.humidity < 50 then
-			return nil
-		end
 		for i=1,MAX_SEARCH_HEIGHT do
 			local pos = vector.add(c.pos, vector.new(0, i, 0))
 			local nn = aurum.force_get_node(pos).name
