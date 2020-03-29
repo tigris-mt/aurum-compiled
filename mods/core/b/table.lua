@@ -3,11 +3,7 @@ b.t = {}
 -- Combine tables and return the result. Later tables take priority.
 function b.t.combine(...)
 	local ret = {}
-	for _,t in ipairs({...}) do
-		for k,v in pairs(t) do
-			ret[k] = v
-		end
-	end
+	b.t.merge(ret, ...)
 	return ret
 end
 
@@ -140,5 +136,13 @@ function b.t.deep_copy(t)
 		return ret
 	else
 		return t
+	end
+end
+
+function b.t.merge(to, ...)
+	for _,t in ipairs{...} do
+		for k,v in pairs(t) do
+			to[k] = v
+		end
 	end
 end
