@@ -34,6 +34,9 @@ function aurum.biomes.register_all(realm, def)
 	def = b.t.combine({
 		_groups = {},
 		_variants = {},
+		_complex_variants = false,
+		_realm = realm,
+		_color = {r = math.random(0, 255), g = math.random(0, 255), b = math.random(0, 255)},
 	}, def)
 
 	table.insert(def._groups, "all")
@@ -60,6 +63,13 @@ function aurum.biomes.get_all_group(group, variants)
 			for _,v in ipairs(variants or b.t.keys(def._variants)) do
 				if def._variants[v] then
 					table.insert(ret, add_suffix(def.name, v))
+				end
+				if def._complex_variants then
+					for vk,vv in pairs(def._variants) do
+						if vv._master_variant == v then
+							table.insert(ret, add_suffix(def.name, vk))
+						end
+					end
 				end
 			end
 		end
