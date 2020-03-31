@@ -146,3 +146,20 @@ function b.t.merge(to, ...)
 		end
 	end
 end
+
+-- Iterate through all elements in the array array, but start at a random point.
+function b.t.ro_ipairs(array)
+	if #array <= 1 then
+		return ipairs(array)
+	else
+		local i = 0
+		local start = math.random(#array)
+		return function()
+			i = i + 1
+			local wi = ((i + start) % #array) + 1
+			if i <= #array then
+				return wi, array[wi]
+			end
+		end
+	end
+end

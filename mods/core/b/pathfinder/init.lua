@@ -37,10 +37,23 @@ function b.pathfinder.path(def)
 		--- group: specify_vertical
 		jump_height = 1,
 		drop_height = 1,
+
+		-- Entity clearance, simply height.
+		--- group: clearance_height
+		clearance_height = 1,
+
+		-- Entity clearance, collisionbox table.
+		--- group: clearance_box
+		clearance_box = nil,
+
+		-- Detect node pathing properties.
+		-- function(pos, node) -> boolean indicating if node has property.
+		--- group: node_functions
+		node_passable = nil,
+		node_walkable = nil,
 	}, def)
 
-	local pathfinder = assert(b.pathfinder.pathfinders[def.method], "no such pathfinder: " .. def.method)
-	return pathfinder.func(def)
+	return assert(b.pathfinder.pathfinders[def.method], "no such pathfinder: " .. def.method).func(def)
 end
 
 -- Get a pathfinder method that supports all the groups in the passed set.

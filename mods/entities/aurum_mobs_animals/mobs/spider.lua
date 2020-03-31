@@ -62,13 +62,25 @@ aurum.mobs.register("aurum_mobs_animals:spider", {
 				},
 			},
 
-			go = {
+			stand = {
 				actions = {
-					"aurum_mobs:go",
+					"aurum_mobs:find_prey",
+					"aurum_mobs:timeout",
 				},
 
 				events = {
-					reached = "roam",
+					found_prey = "go_fight",
+				},
+			},
+
+			go = {
+				actions = {
+					"aurum_mobs:go",
+					"aurum_mobs:timeout",
+				},
+
+				events = {
+					reached = "stand",
 				},
 			},
 
@@ -76,6 +88,7 @@ aurum.mobs.register("aurum_mobs_animals:spider", {
 				actions = {
 					"aurum_mobs:adrenaline",
 					"aurum_mobs:go",
+					"aurum_mobs:timeout",
 				},
 				events = {
 					reached = "fight",
@@ -107,5 +120,11 @@ aurum.mobs.register_spawn{
 		b.set(aurum.biomes.get_all_group("aurum:loom"))
 	)),
 	light_max = 9,
+}
+
+aurum.mobs.register_spawn{
+	mob = "aurum_mobs_animals:spider",
+	chance = 19 ^ 3,
+	biomes = aurum.biomes.get_all_group("aurum:loom"),
 }
 
