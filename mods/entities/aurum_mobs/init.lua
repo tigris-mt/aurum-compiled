@@ -3,6 +3,7 @@ local storage = minetest.get_mod_storage()
 
 aurum.mobs = {
 	DEBUG = minetest.settings:get_bool("aurum.mobs.debug", false),
+	CHEAP = minetest.settings:get_bool("aurum.mobs.cheap_pathfinding", false),
 }
 
 aurum.mobs.mobs = {}
@@ -14,7 +15,20 @@ aurum.mobs.initial_data = {
 	habitat_nodes = {},
 	-- Mana released upon death.
 	xmana = 1,
+
+	status_effects = {},
 }
+
+-- Returns:
+--- nil
+-- or
+--- gemai ref, name, id
+function aurum.mobs.get_mob(object)
+	local l = object:get_luaentity()
+	if l and l._aurum_mobs_id then
+		return l._gemai, l.name, l._aurum_mobs_id
+	end
+end
 
 local uids = storage:get_int("uids")
 
@@ -28,8 +42,12 @@ function gemai.ref_to_table(obj)
 end
 
 -- For mobs that walk simply.
-aurum.mobs.PATHMETHOD_WALK = b.pathfinder.get_pathfinder(b.set{
+aurum.mobs.PATHMETHOD_WALK = b.pathfinder.require_pathfinder(b.set{
+	aurum.mobs.CHEAP and "cheap" or "any",
 	"specify_vertical",
+	"node_functions_walkable",
+	"node_functions_passable",
+	"clearance_height",
 })
 
 aurum.mobs.DEFAULT_PATHFINDER = {
@@ -92,6 +110,9 @@ function aurum.mobs.register(name, def)
 
 			self.object:set_armor_groups(b.t.combine(gdamage.armor_defaults(), def.armor_groups))
 
+			-- Create temporary data to hold pathing.
+			self._go = {}
+
 			-- If the entity is new, run initialization.
 			if not self._data.initialized then
 				self:_mob_init()
@@ -103,6 +124,7 @@ function aurum.mobs.register(name, def)
 			if self._data.armor_groups then
 				self.object:set_armor_groups(self._data.armor_groups)
 			end
+			self.object:set_hp(self._data.hp or self.object:get_hp())
 
 			-- Attach gemai.
 			gemai.attach_to_entity(self, def.gemai, self._data.gemai)
@@ -124,6 +146,7 @@ function aurum.mobs.register(name, def)
 
 		get_staticdata = function(self)
 			-- Save current properties.
+			self._data.hp = self.object:get_hp()
 			self._data.properties = self.object:get_properties()
 			self._data.nametag_attributes = self.object:get_nametag_attributes()
 			self._data.armor_groups = self.object:get_armor_groups()
@@ -137,6 +160,25 @@ function aurum.mobs.register(name, def)
 			self.object:set_properties{infotext = tag}
 			self.object:set_nametag_attributes{text = tag}
 			self._gemai:step(dtime)
+
+			local remove = {}
+			for name,state in pairs(self._gemai.data.status_effects) do
+				state.duration = state.duration - dtime
+				if state.duration < 0 then
+					aurum.effects.effects[name].cancel(self.object, state.level)
+					table.insert(remove, name)
+				elseif state.next then
+					state.next = state.next - dtime
+					if state.next < 0 then
+						aurum.effects.effects[name].apply(self.object, state.level)
+						state.next = aurum.effects.effects[name].repeat_interval
+					end
+				end
+			end
+
+			for _,name in ipairs(remove) do
+				self._gemai.data.status_effects[name] = nil
+			end
 		end,
 
 		on_death = function(self, killer)
@@ -151,13 +193,16 @@ function aurum.mobs.register(name, def)
 
 		on_punch = function(self, puncher)
 			if puncher ~= self.object then
+				if puncher:is_player() then
+					aurum.effects.apply_tool_effects(puncher:get_wielded_item(), self.object)
+				end
 				self._gemai:fire_event("punch", {
 					other = gemai.ref_to_table(puncher),
 					target = {
 						type = "ref_table",
 						ref_table = gemai.ref_to_table(puncher),
 					},
-				})
+				}, {clear = true})
 			end
 		end,
 

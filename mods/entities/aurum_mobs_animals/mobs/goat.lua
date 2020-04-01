@@ -39,6 +39,7 @@ aurum.mobs.register("aurum_mobs_animals:goat", {
 			punch = "fight",
 			lost = "roam",
 			interact = "interact",
+			herd_alerted = "go_fight",
 		},
 
 		states = {
@@ -64,6 +65,16 @@ aurum.mobs.register("aurum_mobs_animals:goat", {
 				},
 			},
 
+			stand = {
+				actions = {
+					"aurum_mobs:find_food",
+					"aurum_mobs:timeout",
+				},
+				events = {
+					found_food = "go_food",
+				},
+			},
+
 			mate = {
 				actions = {
 					"aurum_mobs:check_mate",
@@ -80,6 +91,7 @@ aurum.mobs.register("aurum_mobs_animals:goat", {
 					"aurum_mobs:check_mate",
 					"aurum_mobs:adrenaline",
 					"aurum_mobs:go",
+					"aurum_mobs:timeout",
 				},
 				events = {
 					reached = "mate",
@@ -91,6 +103,7 @@ aurum.mobs.register("aurum_mobs_animals:goat", {
 				actions = {
 					"aurum_mobs:check_target_food",
 					"aurum_mobs:go",
+					"aurum_mobs:timeout",
 				},
 				events = {
 					reached = "roam",
@@ -100,24 +113,25 @@ aurum.mobs.register("aurum_mobs_animals:goat", {
 
 			go = {
 				actions = {
-					"aurum_mobs:find_food",
 					"aurum_mobs:go",
+					"aurum_mobs:timeout",
 				},
 
 				events = {
-					found_food = "go_food",
-					reached = "roam",
+					reached = "stand",
 				},
 			},
 
 			fight = {
 				actions = {
 					"aurum_mobs:adrenaline",
+					"aurum_mobs:alert_herd",
 					"aurum_mobs:attack",
 				},
 				events = {
 					interact = "",
 					noreach = "go_fight",
+					herd_alerted = "",
 				},
 			},
 
@@ -137,11 +151,14 @@ aurum.mobs.register("aurum_mobs_animals:goat", {
 			go_fight = {
 				actions = {
 					"aurum_mobs:adrenaline",
+					"aurum_mobs:alert_herd",
 					"aurum_mobs:go",
+					"aurum_mobs:timeout",
 				},
 				events = {
 					interact = "",
 					reached = "fight",
+					herd_alerted = "",
 				},
 			},
 		},

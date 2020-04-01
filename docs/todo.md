@@ -1,6 +1,5 @@
 # Base Gameplay
 * Mobs
-	* Hostile
 	* NPC
 
 # Extended Gameplay
@@ -10,6 +9,7 @@
 * Hand swapping
 * Awards
 * Automation/circuits
+* Range weapons
 
 # Polish
 * Properly lay out biomes.
@@ -42,3 +42,7 @@
 	* This is the fallen portion of the previous world abandoned by its titan.
 * Aether
 	* Precise teleportation within the Aether possible.
+
+# Technical Enhancements
+* Status effects on tool capabilities
+* GEquip action or status effects from wielded items

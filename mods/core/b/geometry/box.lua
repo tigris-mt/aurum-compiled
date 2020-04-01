@@ -87,6 +87,18 @@ function m.voxelarea(box)
 	return VoxelArea:new{MinEdge=box.a, MaxEdge=box.b}
 end
 
+-- To entity collision box.
+function m.to_cbox(box)
+	return {
+		box.a.x,
+		box.a.y,
+		box.a.z,
+		box.b.x,
+		box.b.y,
+		box.b.z,
+	}
+end
+
 -- Get all positions in the box.
 -- If sort_near is specified, the positions will be sorted in order nearest to sort_near.
 function m.poses(box, sort_near)

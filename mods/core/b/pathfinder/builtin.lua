@@ -1,8 +1,16 @@
-b.pathfinder.register("builtin", {
-	func = function(def)
-		return minetest.find_path(def.from, def.to, def.search_distance, def.jump_height, def.drop_height)
-	end,
-	expense = 1,
+b.pathfinder.register("b:builtin", {
+	metatable = {
+		init = function(self)
+			self.path = minetest.find_path(self.from, self.to, self.def.search_distance, self.def.jump_height, self.def.drop_height)
+			self.i = 1
+			return not not self.path
+		end,
+		next = function(self)
+			self.i = self.i + 1
+			return self.path[self.i]
+		end,
+	},
+	priority = 1,
 	groups = b.set{
 		"specify_vertical",
 	},
