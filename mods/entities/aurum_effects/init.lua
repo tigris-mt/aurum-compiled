@@ -1,6 +1,7 @@
 local S = minetest.get_translator()
 aurum.effects = {
 	effects = {},
+	enchants = {},
 }
 
 function aurum.effects.add(object, name, level, duration)
@@ -76,9 +77,13 @@ function aurum.effects.register(name, def)
 		hidden = false,
 		cancel_on_death = true,
 		repeat_interval = nil,
+		enchant = b.set{"tool"},
+		tool_duration = function(level)
+			return 5
+		end,
 		apply = function(object, level) end,
 		cancel = function(object, level) end,
-	}, def)
+	}, def, {name = name})
 
 	for level=1,def.max_level do
 		playereffects.register_effect_type(name .. "_" .. level, S("@1 @2", def.description, tostring(level)), def.icon, {name, "aurum_effects"},
@@ -90,7 +95,32 @@ function aurum.effects.register(name, def)
 			end, def.hidden, def.cancel_on_death, def.repeat_interval)
 	end
 
+	if def.enchant then
+		aurum.tools.register_enchant("effect_" .. name, {
+			categories = def.enchant,
+			max_level = def.max_level,
+			description = S("@1 Essence", def.description),
+			longdesc = S("Applies the @1 effect on a hit.", def.description),
+		})
+		aurum.effects.enchants["effect_" .. name] = def
+	end
+
 	aurum.effects.effects[name] = def
 end
+
+function aurum.effects.apply_tool_effects(stack, object)
+	for k,v in pairs(aurum.tools.get_item_enchants(stack)) do
+		local e = aurum.effects.enchants[k]
+		if e then
+			aurum.effects.add(object, e.name, v, e.tool_duration(v))
+		end
+	end
+end
+
+minetest.register_on_punchplayer(function(player, hitter)
+	if player:get_hp() > 0 then
+		aurum.effects.apply_tool_effects(hitter:get_wielded_item(), player)
+	end
+end)
 
 b.dodir("effects")
