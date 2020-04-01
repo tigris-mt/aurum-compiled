@@ -27,7 +27,10 @@ function b.pathfinder.register(method, fdef)
 	b.pathfinder.pathfinders[method] = fdef
 end
 
-function b.pathfinder.default_passable(pos, node) return not minetest.registered_nodes[node.name].walkable and minetest.get_item_group(node.name, "liquid") == 0 end
+function b.pathfinder.default_passable(pos, node)
+	local def = minetest.registered_nodes[node.name]
+	return not def.walkable and (def.liquidtype or "none") == "none" and (def.damage_per_second or 0) <= 0
+end
 function b.pathfinder.default_walkable(pos, node) return minetest.registered_nodes[node.name].walkable end
 function b.pathfinder.default_climbable(pos, node) return minetest.registered_nodes[node.name].climbable end
 
