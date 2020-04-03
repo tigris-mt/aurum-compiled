@@ -38,4 +38,4 @@ mods/player/aurum_gui/textures/gui_hb_bg.png -> ../../../../submodules/minetest_
 mods/player/aurum_gui/textures/heart.png -> ../../../../submodules/minetest_game/mods/default/textures/heart.png
 mods/player/creative -> ../../submodules/minetest_game/mods/creative
 screenshot.png -> screenshots/aurum_graveyard.0.23.2.png
-tools/pandoc_bbcode_phbb.lua -> ../submodules/2bbcode/bbcode_phpbb.lua
+tools/pandoc_bbcode_phpbb.lua -> ../submodules/2bbcode/bbcode_phpbb.lua
