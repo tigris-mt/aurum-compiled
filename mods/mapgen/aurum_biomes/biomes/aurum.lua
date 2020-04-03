@@ -121,8 +121,15 @@ aurum.biomes.register_all("aurum:aurum", {
 		base = aurum.biomes.v_base{
 			node_top = "aurum_base:sand",
 			depth_top = 8,
+			node_dungeon = "aurum_clay:orange_brick",
+			node_dungeon_alt = "aurum_clay:orange_clay",
+			node_dungeon_stair = "aurum_clay:orange_brick",
 		},
-		ocean = aurum.biomes.v_ocean{},
+		ocean = aurum.biomes.v_ocean{
+			node_dungeon = "aurum_clay:orange_brick",
+			node_dungeon_alt = "aurum_clay:orange_clay",
+			node_dungeon_stair = "aurum_clay:orange_brick",
+		},
 		under = aurum.biomes.v_under{},
 	},
 })
@@ -188,13 +195,18 @@ aurum.biomes.register_all("aurum:aurum", {
 })
 
 local function clay(color, def)
+	local c = "aurum_clay:" .. color .. "_clay"
+	local brick = "aurum_clay:" .. color .. "_brick"
 	return b.t.combine({
 		depth_top = 1,
 		depth_filler = 1,
-		node_riverbed = "aurum_clay:" .. color,
-		node_top = "aurum_clay:" .. color,
-		node_filler = "aurum_clay:" .. color,
-		node_stone = "aurum_clay:" .. color,
+		node_riverbed = c,
+		node_top = c,
+		node_filler = c,
+		node_stone = c,
+		node_dungeon = brick,
+		node_dungeon_alt = c,
+		node_dungeon_stair = brick,
 	}, def or {})
 end
 
