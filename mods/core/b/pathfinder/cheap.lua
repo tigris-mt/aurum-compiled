@@ -13,7 +13,7 @@ b.pathfinder.register("b:cheap", {
 
 			-- Jump if necessary to find clearance.
 			if not (function()
-				for i=0,self:jump_height(self.at) do
+				for i=1,self:jump_height(self.at) do
 					if self:clearance(next_pos) then
 						break
 					end
@@ -59,6 +59,8 @@ b.pathfinder.register("b:cheap", {
 			for i=0,self.def.jump_height do
 				if self:clearance(vector.add(pos, vector.new(0, i, 0))) then
 					free_space = i
+				else
+					break
 				end
 			end
 			return free_space
