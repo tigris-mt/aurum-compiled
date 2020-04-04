@@ -4,6 +4,8 @@ local storage = minetest.get_mod_storage()
 aurum.mobs = {
 	DEBUG = minetest.settings:get_bool("aurum.mobs.debug", false),
 	CHEAP = minetest.settings:get_bool("aurum.mobs.cheap_pathfinding", false),
+	SPAWN_LIMIT = tonumber(minetest.settings:get("aurum.mobs.spawn_limit")) or 4,
+	SPAWN_RADIUS = 40,
 }
 
 aurum.mobs.mobs = {}
@@ -158,7 +160,7 @@ function aurum.mobs.register(name, def)
 			local tag = ("%s %d/%d%s%s"):format(self._aurum_mob.name, self.object:get_hp(), self.object:get_properties().hp_max, minetest.colorize("#ff0000", "♥"),
 				aurum.mobs.DEBUG and (" %s %d(%d)"):format(self._gemai.data.state, self._gemai.data.live_time, self._gemai.data.state_time) or "")
 			self.object:set_properties{infotext = tag}
-			self.object:set_nametag_attributes{text = tag}
+			-- self.object:set_nametag_attributes{text = tag}
 			self._gemai:step(dtime)
 
 			local remove = {}
@@ -251,3 +253,4 @@ minetest.register_chatcommand("mob_spawn", {
 b.dodir("actions")
 b.dofile("doc.lua")
 b.dofile("spawning.lua")
+b.dofile("spawner.lua")
