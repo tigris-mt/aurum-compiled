@@ -55,7 +55,7 @@ for _,c in ipairs{
 			local below = vector.subtract(pos, vector.new(0, 1, 0))
 			local bnode = minetest.get_node(below)
 			if bnode.name == node.name or bnode.name == "aurum_caves:vine_fruit" then
-				minetest.dig_node(below, bnode, digger)
+				minetest.dig_node(below)
 			end
 		end,
 	})
@@ -76,8 +76,8 @@ minetest.register_node("aurum_caves:vine_fruit", {
 			0.35, 0.5, 0.35,
 		},
 	},
-	groups = {dig_chop = 3, edible = 4},
-	on_use = minetest.item_eat(4),
+	groups = {dig_chop = 3, edible = 12},
+	on_use = minetest.item_eat(12),
 })
 
 aurum.features.register_decoration{

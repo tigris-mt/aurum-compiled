@@ -15,9 +15,9 @@ Aurum is currently in its rapid development stage, working toward a fully-featur
 * Heavily extensible functionality for modding or contributing.
 
 # Getting Aurum
-The [latest stable version](https://github.com/tigris-mt/aurum-compiled/archive/stable.zip) of Aurum is 0.45.7, developed for Minetest 5.2.0 and later.
+The [latest stable version](https://github.com/tigris-mt/aurum-compiled/archive/stable.zip) of Aurum is 0.45.8, developed for Minetest 5.2.0 and later.
 
-* Direct download: [Stable 0.45.7](https://github.com/tigris-mt/aurum-compiled/archive/stable.zip)
+* Direct download: [Stable 0.45.8](https://github.com/tigris-mt/aurum-compiled/archive/stable.zip)
 * Direct download: [Development](https://github.com/tigris-mt/aurum-compiled/archive/master.zip)
 * Source repository (has lots of submodules): [Development](https://github.com/tigris-mt/aurum)
 * Source repository (automatically generated, no submodules): [Compiled](https://github.com/tigris-mt/aurum-compiled)
@@ -47,3 +47,6 @@ In the compiled repository, certain submodules are removed for the sake of space
 * [minetest_game](https://github.com/minetest/minetest_game)
 
 You can view the assets and code that originate from such submodules in [symlink_report.txt](https://raw.githubusercontent.com/tigris-mt/aurum-compiled/master/symlink_report.txt)
+
+## Screenshot
+![Screenshot of a forest graveyard](https://raw.githubusercontent.com/tigris-mt/aurum/master/screenshots/aurum_graveyard.0.23.2.png)
