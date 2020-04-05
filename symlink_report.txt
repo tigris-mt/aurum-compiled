@@ -26,7 +26,6 @@ mods/items/aurum_books/textures/default_book.png -> ../../../../submodules/minet
 mods/items/aurum_books/textures/default_book_written.png -> ../../../../submodules/minetest_game/mods/default/textures/default_book_written.png
 mods/items/aurum_cook/textures/default_furnace_fire_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_bg.png
 mods/items/aurum_cook/textures/default_furnace_fire_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_fg.png
-mods/items/aurum_tools/textures/wieldhand.png -> ../../../../submodules/minetest_game/mods/default/textures/wieldhand.png
 mods/player/aurum_gui/textures/gui_formbg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_formbg.png
 mods/player/aurum_gui/textures/gui_furnace_arrow_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_bg.png
 mods/player/aurum_gui/textures/gui_furnace_arrow_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_fg.png
