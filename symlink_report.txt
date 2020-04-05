@@ -4,7 +4,8 @@ menu/background.3.png -> ../screenshots/primus_forest.0.27.0.png
 menu/background.4.png -> ../screenshots/aurum_clay_0.45.3.png
 menu/background.5.png -> ../screenshots/loom_crystal_forest.0.20.0.png
 menu/background.6.png -> ../screenshots/aurum_jungle_log.0.21.1.png
-menu/background.7.png -> ../screenshots/aether_crystal_forest.0.30.0.png
+menu/background.7.png -> ../screenshots/player.0.46.0.png
+menu/background.8.png -> ../screenshots/aether_crystal_forest.0.30.0.png
 menu/background.png -> ../screenshots/aurum_graveyard.0.23.2.png
 menu/icon.png -> ../mods/items/aurum_scrolls/textures/aurum_scrolls_scroll_full.png
 mods/core/aurum/sounds -> ../../../submodules/minetest_game/mods/default/sounds
@@ -26,7 +27,6 @@ mods/items/aurum_books/textures/default_book.png -> ../../../../submodules/minet
 mods/items/aurum_books/textures/default_book_written.png -> ../../../../submodules/minetest_game/mods/default/textures/default_book_written.png
 mods/items/aurum_cook/textures/default_furnace_fire_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_bg.png
 mods/items/aurum_cook/textures/default_furnace_fire_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/default_furnace_fire_fg.png
-mods/items/aurum_tools/textures/wieldhand.png -> ../../../../submodules/minetest_game/mods/default/textures/wieldhand.png
 mods/player/aurum_gui/textures/gui_formbg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_formbg.png
 mods/player/aurum_gui/textures/gui_furnace_arrow_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_bg.png
 mods/player/aurum_gui/textures/gui_furnace_arrow_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_fg.png
