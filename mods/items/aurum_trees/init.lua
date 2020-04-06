@@ -110,7 +110,7 @@ function m.register(name, def)
 		local spec = b.t.combine(default, {
 			-- Builds a translatable description according to the tree's S parameter.
 			description = def.S("@1 @2", def.description, default.description or ""),
-		}, def[sub] or {}, {
+		}, def.all or {}, def[sub] or {}, {
 			groups = b.t.combine(default.groups, (def[sub] or {}).groups or {}),
 		})
 
@@ -132,7 +132,7 @@ function m.register(name, def)
 		description = S"Trunk",
 		_doc_items_longdesc = S"The trunk of a tree.",
 		sounds = aurum.sounds.wood(),
-		groups = {dig_chop = 3, tree = 1, flammable = 1},
+		groups = {dig_chop = 3, tree = 1, flammable = 1, shapable = 1},
 		tiles = {def.texture_base:format("trunk_top"), def.texture_base:format("trunk_top"), def.texture_base:format("trunk")},
 
 		paramtype2 = "facedir",
@@ -143,7 +143,7 @@ function m.register(name, def)
 		description = S"Planks",
 		_doc_items_longdesc = S"Wood cut into planks. Firm and useful.",
 		sounds = aurum.sounds.wood(),
-		groups = {dig_chop = 3, wood = 1, flammable = 1},
+		groups = {dig_chop = 3, wood = 1, flammable = 1, shapable = 1},
 	})
 
 	if def.planks and def.trunk then

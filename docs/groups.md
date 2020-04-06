@@ -40,11 +40,13 @@ Toughless levels range from 0 to 3.
 * `color_X=1`: This item provides/is color X.
 * `dough=1`: This item is a generic dough.
 * `dye=1`: This item is dye.
+* `dye_colorable=1`: This item can be colored with dye. The base name is stored in `_aurum_dye_base` in the def.
 * `dye_source=1`: This item is dye source.
 * `equipment=1`: For equipment.
 * `glass=1`: This item is glass.
 * `raw_meat=1`: Some type of raw flesh.
 * `rod=1`: For rods.
+* `shapable=1`: This node can be cut into different shapes.
 * `stick=1`: For sticks. The doc modpack semi-requires a stick group.
 * `tool=1`: For tools.
 
