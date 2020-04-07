@@ -28,6 +28,8 @@ b.dodir = function(path, recursive)
 	end
 end
 
+b.dofile("chance.lua")
+
 b.dofile("cache.lua")
 b.dofile("table.lua")
 b.dofile("set.lua")
