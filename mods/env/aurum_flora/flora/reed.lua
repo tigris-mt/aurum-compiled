@@ -28,6 +28,19 @@ aurum.flora.register("aurum_flora:reed", {
 	end,
 })
 
+minetest.register_craft{
+	type = "fuel",
+	recipe = "aurum_flora:reed",
+	burntime = 3,
+}
+
+minetest.register_craft{
+	output = "aurum_base:paste 2",
+	recipe = {
+		{"aurum_flora:reed", "aurum_flora:reed"},
+	},
+}
+
 minetest.register_decoration{
 	name = "aurum_flora:reed",
 	decoration = "aurum_flora:reed",

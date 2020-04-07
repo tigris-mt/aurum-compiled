@@ -31,7 +31,7 @@ for _,c in ipairs{
 				length = 1,
 			},
 		}},
-		groups = {flora = 0, attached_node = 0},
+		groups = {flora = 0, attached_node = 0, cave_vine = 1},
 		waving = 0,
 		buildable_to = false,
 		selection_box = {
@@ -58,6 +58,19 @@ for _,c in ipairs{
 		end,
 	})
 end
+
+minetest.register_craft{
+	type = "fuel",
+	recipe = "group:cave_vine",
+	burntime = 3,
+}
+
+minetest.register_craft{
+	output = "aurum_base:paste 2",
+	recipe = {
+		{"group:cave_vine", "group:cave_vine", "group:cave_vine"},
+	},
+}
 
 minetest.register_node("aurum_caves:vine_fruit", {
 	description = S"Cave Vine Fruit",
