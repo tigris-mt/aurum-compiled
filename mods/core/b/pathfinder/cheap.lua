@@ -7,17 +7,21 @@ b.pathfinder.register("b:cheap", {
 
 		next = function(self)
 			local delta = vector.subtract(self.to, self.at)
-			delta.y = math.sign(delta.y)
+			-- If jumping is enabled, then try not to go directly vertical.
+			if self.def.jump_height >= 0 then
+				delta.y = math.sign(delta.y)
+			end
 			local dir = vector.normalize(delta)
 			local next_pos = vector.round(vector.add(self.at, dir))
+			local original_next_pos = next_pos
 
 			-- Jump if necessary to find clearance.
 			if not (function()
-				for i=1,self:jump_height(self.at) do
+				for i=-self:jump_down_height(self.at),self:jump_height(self.at) do
 					if self:clearance(next_pos) then
 						break
 					end
-					next_pos = vector.add(next_pos, vector.new(0, 1, 0))
+					next_pos = vector.add(original_next_pos, vector.new(0, i, 0))
 				end
 				return self:clearance(next_pos)
 			end)() then
@@ -31,7 +35,7 @@ b.pathfinder.register("b:cheap", {
 			end
 
 			-- Ensure we're going to walk on a safe place.
-			if not (function()
+			if self.def.drop_height >= 0 and not (function()
 				for i=1,self.def.drop_height do
 					local pos = vector.subtract(next_pos, vector.new(0, i, 0))
 					if self.def.node_walkable(pos, minetest.get_node(pos)) then
@@ -56,11 +60,25 @@ b.pathfinder.register("b:cheap", {
 
 		jump_height = function(self, pos)
 			local free_space = 0
-			for i=0,self.def.jump_height do
+			for i=0,math.abs(self.def.jump_height) do
 				if self:clearance(vector.add(pos, vector.new(0, i, 0))) then
 					free_space = i
 				else
 					break
+				end
+			end
+			return free_space
+		end,
+
+		jump_down_height = function(self, pos)
+			local free_space = 0
+			if self.def.jump_height < 0 then
+				for i=0,math.abs(self.def.jump_height) do
+					if self:clearance(vector.add(pos, vector.new(0, -i, 0))) then
+						free_space = i
+					else
+						break
+					end
 				end
 			end
 			return free_space

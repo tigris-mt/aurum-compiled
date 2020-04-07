@@ -56,6 +56,7 @@ function b.pathfinder.path(def)
 		resolution = 1,
 
 		-- Maximum height differences to allow.
+		-- Negative numbers to disable checking (flight mode).
 		--- group: specify_vertical
 		jump_height = 1,
 		drop_height = 1,
