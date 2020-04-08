@@ -2,7 +2,7 @@ local S = minetest.get_translator()
 
 aurum.mobs.register("aurum_mobs_animals:angler", {
 	description = S"Angler",
-	longdesc = S"A uniquely Aurum creature, this hostile fish inhabits all waters.\nSpecimens that live underground are uniquely powerful.",
+	longdesc = S"A uniquely Aurum creature, this fish inhabits all waters in that realm.\nSpecimens that live underground are uniquely powerful and hostile.",
 
 	initial_properties = {
 		visual = "sprite",
@@ -35,6 +35,8 @@ aurum.mobs.register("aurum_mobs_animals:angler", {
 				self._data.gemai.attack = b.t.combine(aurum.mobs.initial_data.attack, {
 					damage = {pierce = 16},
 				})
+			else
+				self._data.gemai.hunt_prey = {""}
 			end
 		end,
 	},
