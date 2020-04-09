@@ -1,3 +1,5 @@
+local S = minetest.get_translator("central_message")
+
 cmsg = {}
 cmsg.hudids = {}
 cmsg.messages = {}
@@ -92,6 +94,7 @@ cmsg.push_message_player = function(player, text)
 				direction = 3,
 				alignment = {x=0,y=1},
 				scale = {x=800,y=20*cmsg.settings.max_messages},
+				z_index = 10,
 			})
 			cmsg.messages[pname] = {}
 			cmsg.next_msgids[pname] = 0
@@ -142,29 +145,29 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 minetest.register_privilege("announce", {
-	description = "Can use /cmsg",
+	description = S("Can use /cmsg"),
 	give_to_singleplayer = false,
 })
 minetest.register_chatcommand("cmsg", {
-	description = "Show message in the center of the screen to player (“*” sends to all players)",
+	description = S("Show message in the center of the screen to player (“*” sends to all players)"),
 	privs = {announce = true},
-	params = "<player> <text>",
+	params = S("<player> <text>"),
 	func = function(name, params)
 		local player = minetest.get_player_by_name(name)
 		local targetname, text = string.match(params, "^(%S+)%s(.+)$")
 		if not targetname then
-			return false, "Invalid usage, see /help title"
+			return false, S("Invalid usage, see “/help cmsg”.")
 		end
 		if targetname == "*" then
 			cmsg.push_message_all(text)
-			return true, "Message sent."
+			return true, S("Message sent.")
 		else
 			local target = minetest.get_player_by_name(targetname)
 			if not target then
-				return false, "The player "..targetname.." is not online."
+				return false, S("The player @1 is not online.", targetname)
 			end
 			cmsg.push_message_player(target, text)
-			return true, "Message sent."
+			return true, S("Message sent.")
 		end
 	end,
 })

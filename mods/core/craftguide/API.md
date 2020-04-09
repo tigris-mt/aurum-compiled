@@ -2,6 +2,12 @@
 
 ### Custom recipes
 
+Custom recipes are nonconventional crafts outside the main crafting grid.
+They can be registered in-game dynamically and have a size beyond 3x3 items.
+
+**Note:** the registration format differs from the default registration format in everything.
+The width is automatically calculated depending where you place the commas. Look at the examples attentively.
+
 #### Registering a custom crafting type (example)
 
 ```Lua
@@ -16,13 +22,23 @@ craftguide.register_craft_type("digging", {
 ```Lua
 craftguide.register_craft({
 	type   = "digging",
-	width  = 1,
 	result = "default:cobble 2",
 	items  = {"default:stone"},
 })
 ```
 
-Recipes can also be registered in a Minecraft-like way:
+```Lua
+craftguide.register_craft({
+	result = "default:cobble 16",
+	items = {
+		"default:stone, default:stone, default:stone",
+		"default:stone,              , default:stone",
+		"default:stone, default:stone, default:stone",
+	}
+})
+```
+
+Recipes can be registered in a Minecraft-like way:
 
 ```Lua
 craftguide.register_craft({
@@ -37,6 +53,38 @@ craftguide.register_craft({
 		['X'] = "default:glass",
 	},
 	result = "default:mese 3",
+})
+```
+
+Multiples recipes can also be registered:
+
+```Lua
+craftguide.register_craft({
+	{
+		result = "default:mese",
+		items = {
+			"default:mese_crystal, default:mese_crystal",
+			"default:mese_crystal, default:mese_crystal",
+		}
+	},
+
+	big = {
+		result = "default:mese 4",
+		items = {
+			"default:mese_crystal, default:mese_crystal",
+			"default:mese_crystal, default:mese_crystal",
+			"default:mese_crystal, default:mese_crystal",
+			"default:mese_crystal, default:mese_crystal",
+		}
+	},
+})
+```
+
+Recipes can be registered from a given URL containing a JSON file (HTTP support is required¹):
+
+```Lua
+craftguide.register_craft({
+	url = "https://raw.githubusercontent.com/minetest-mods/craftguide/master/test.json"
 })
 ```
 
@@ -69,13 +117,13 @@ craftguide.add_recipe_filter("Hide secretstuff", function(recipes)
 end)
 ```
 
-#### `craftguide.remove_recipe_filter(name)`
-
-Removes the recipe filter with the given name.
-
 #### `craftguide.set_recipe_filter(name, function(recipe, player))`
 
 Removes all recipe filters and adds a new one.
+
+#### `craftguide.remove_recipe_filter(name)`
+
+Removes the recipe filter with the given name.
 
 #### `craftguide.get_recipe_filters()`
 
@@ -155,3 +203,12 @@ You can add a stereotype like so:
 ```Lua
 craftguide.group_stereotypes.radioactive = "mod:item"
 ```
+
+#### `craftguide.export_url`
+
+If set, the mod will export all the cached recipes and usages in a JSON format
+to the given URL (HTTP support is required¹).
+
+---
+
+**¹** Add `craftguide` to the `secure.http_mods` or `secure.trusted_mods` setting in `minetest.conf`.

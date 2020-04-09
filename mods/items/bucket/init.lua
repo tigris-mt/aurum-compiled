@@ -1,6 +1,9 @@
 -- Minetest 0.4 mod: bucket
 -- See README.txt for licensing and other information.
 
+-- Load support for MT game translation.
+local S = minetest.get_translator("bucket")
+
 minetest.register_alias("bucket", "bucket:bucket_empty")
 minetest.register_alias("bucket_water", "bucket:bucket_water")
 minetest.register_alias("bucket_lava", "bucket:bucket_lava")
@@ -105,7 +108,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 end
 
 minetest.register_craftitem("bucket:bucket_empty", {
-	description = "Empty Bucket",
+	description = S("Empty Bucket"),
 	inventory_image = "bucket.png",
 	groups = {tool = 1},
 	liquids_pointable = true,
@@ -178,10 +181,10 @@ minetest.register_craftitem("bucket:bucket_empty", {
 
 if minetest.get_modpath("default") and minetest.settings:get("bucket.mtg", true) then
 	minetest.register_craft({
-		output = 'bucket:bucket_empty 1',
+		output = "bucket:bucket_empty 1",
 		recipe = {
-			{'default:steel_ingot', '', 'default:steel_ingot'},
-			{'', 'default:steel_ingot', ''},
+			{"default:steel_ingot", "", "default:steel_ingot"},
+			{"", "default:steel_ingot", ""},
 		}
 	})
 
@@ -224,5 +227,19 @@ if minetest.get_modpath("default") and minetest.settings:get("bucket.mtg", true)
 		recipe = "bucket:bucket_lava",
 		burntime = 60,
 		replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}},
+	})
+end
+
+-- Register buckets as dungeon loot
+if minetest.global_exists("dungeon_loot") then
+	dungeon_loot.register({
+		{name = "bucket:bucket_empty", chance = 0.55},
+		-- water in deserts/ice or above ground, lava otherwise
+		{name = "bucket:bucket_water", chance = 0.45,
+			types = {"sandstone", "desert", "ice"}},
+		{name = "bucket:bucket_water", chance = 0.45, y = {0, 32768},
+			types = {"normal"}},
+		{name = "bucket:bucket_lava", chance = 0.45, y = {-32768, -1},
+			types = {"normal"}},
 	})
 end

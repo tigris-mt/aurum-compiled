@@ -58,9 +58,17 @@ local function make_label(format_string, format_string_config, label, start_valu
 		if order[o] == "label" then
 			table.insert(params, label)
 		elseif order[o] == "value" then
-			table.insert(params, start_value)
+			if format_string_config.format_value then
+				table.insert(params, string.format(format_string_config.format_value, start_value))
+			else
+				table.insert(params, start_value)
+			end
 		elseif order[o] == "max_value" then
-			table.insert(params, max_value)
+			if format_string_config.format_max_value then
+				table.insert(params, string.format(format_string_config.format_max_value, max_value))
+			else
+				table.insert(params, max_value)
+			end
 		end
 	end
 	local ret
@@ -148,7 +156,16 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 		format_string = N("@1: @2/@3")
 	end
 	if format_string_config == nil then
-		format_string_config = { order = { "label", "value", "max_value" } }
+		format_string_config = {}
+	end
+	if format_string_config.order == nil then
+		format_string_config.order = { "label", "value", "max_value" }
+	end
+	if format_string_config.format_value == nil then
+		format_string_config.format_value = "%d"
+	end
+	if format_string_config.format_max_value == nil then
+		format_string_config.format_max_value = "%d"
 	end
 
 	hudtable.add_all = function(player, hudtable, start_value, start_max, start_hidden)
@@ -183,6 +200,7 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 				text = "hudbars_bar_background.png",
 				alignment = {x=1,y=1},
 				offset = { x = offset.x - 1, y = offset.y - 1 },
+				z_index = 0,
 			})
 			if textures.icon ~= nil then
 				ids.icon = player:hud_add({
@@ -192,6 +210,7 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 					text = textures.icon,
 					alignment = {x=-1,y=1},
 					offset = { x = offset.x - 3, y = offset.y },
+					z_index = 1,
 				})
 			end
 		elseif hb.settings.bar_type == "statbar_modern" then
@@ -205,13 +224,20 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 					offset = { x = offset.x, y = offset.y },
 					direction = 0,
 					size = {x=24, y=24},
+					z_index = 0,
 				})
 			end
 		end
 		local bar_image, bar_size
 		if hb.settings.bar_type == "progress_bar" then
 			bar_image = textures.bar
-			bar_size = {x=2, y=16}
+			-- NOTE: Intentionally set to nil. For some reason, on some systems,
+			-- the progress bar is displaced when the bar_size is set explicitly here.
+			-- On the other hand, setting this to nil is deprecated in MT 5.0.0 due to
+			-- a debug log warning, but nothing is explained in lua_api.txt.
+			-- This section is a potential bug magnet, please watch with care!
+			-- The size of the bar image is expected to be exactly 2×16 pixels.
+			bar_size = nil
 		elseif hb.settings.bar_type == "statbar_classic" or hb.settings.bar_type == "statbar_modern" then
 			bar_image = textures.icon
 			bar_size = {x=24, y=24}
@@ -225,6 +251,7 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 			offset = offset,
 			direction = 0,
 			size = bar_size,
+			z_index = 1,
 		})
 		if hb.settings.bar_type == "progress_bar" then
 			ids.text = player:hud_add({
@@ -235,6 +262,7 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 				number = text_color,
 				direction = 0,
 				offset = { x = offset.x + 2,  y = offset.y - 1},
+				z_index = 2,
 		})
 		end
 		-- Do not forget to update hb.get_hudbar_state if you add new fields to the state table
@@ -293,6 +321,9 @@ function hb.change_hudbar(player, identifier, new_value, new_max_value, new_icon
 
 	local name = player:get_player_name()
 	local hudtable = hb.get_hudtable(identifier)
+	if not hudtable.hudstate[name] then
+		return false
+	end
 	local value_changed, max_changed = false, false
 
 	if new_value ~= nil then
