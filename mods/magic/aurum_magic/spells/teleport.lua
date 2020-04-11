@@ -7,13 +7,18 @@ aurum.magic.register_spell("teleport", {
 
 	rod = function(level) return "aurum_magic:teleport_rod_" .. level end,
 
-	apply_requirements = function(pointed_thing, _, player)
+	apply_requirements = function(pointed_thing)
 		return pointed_thing.type == "node"
 	end,
 
 	apply = function(pointed_thing, level, player)
 		local pos = minetest.get_pointed_thing_position(pointed_thing, true)
-		player:set_pos(pos)
+		local attached = player:get_attach()
+		if attached and attached:get_luaentity() and attached:get_luaentity().name == "aurum_wings:active_wings" then
+			attached:set_pos(pos)
+		else
+			player:set_pos(pos)
+		end
 	end,
 })
 
