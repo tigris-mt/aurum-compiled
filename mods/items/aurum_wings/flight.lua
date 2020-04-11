@@ -25,6 +25,8 @@ minetest.register_entity("aurum_wings:active_wings", {
 	groups = {immortal = 1},
 
 	driver = nil,
+	player_damage = 0,
+	wear_timer = 0,
 
 	on_activate = function(self, staticdata)
 		self.driver = staticdata
@@ -41,6 +43,12 @@ minetest.register_entity("aurum_wings:active_wings", {
 
 			self.object:set_rotation(vector.new(-player:get_look_vertical() - math.pi / 2, player:get_look_horizontal(), 0))
 
+			self.wear_timer = self.wear_timer + dtime
+			if self.wear_timer > 5 then
+				aurum.wings.apply_wear(player, self.wear_timer)
+				self.wear_timer = 0
+			end
+
 			local v = self.object:get_velocity()
 			if v and self.old_vel then
 				local function t(c)
@@ -56,7 +64,9 @@ minetest.register_entity("aurum_wings:active_wings", {
 				damage = damage + t"z"
 				local dy, hy = t"y"
 				damage = damage + dy
+				damage = b.random_whole(damage)
 				if damage >= 1 then
+					self.player_damage = damage
 					player:punch(player, 1, {
 						full_punch_interval = 1,
 						damage_groups = {fall = damage},
@@ -72,6 +82,14 @@ minetest.register_entity("aurum_wings:active_wings", {
 			end
 			self.old_vel = v
 		end
+	end,
+
+	on_attach_child = function(self, player)
+		aurum.wings.on_start_fly(player)
+	end,
+
+	on_detach_child = function(self, player)
+		aurum.wings.on_stop_fly(player, self.player_damage)
 	end,
 })
 
