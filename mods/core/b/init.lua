@@ -8,21 +8,21 @@ end
 b.DODIR_INIT = "init.lua"
 
 b.dodir = function(path, recursive)
-	local path = minetest.get_modpath(minetest.get_current_modname()) .. "/" .. path
-	local names = b.set(minetest.get_dir_list(path, false))
+	local gpath = minetest.get_modpath(minetest.get_current_modname()) .. "/" .. path
+	local names = b.set(minetest.get_dir_list(gpath, false))
 	-- Execute init file first if it exists.
 	if names[b.DODIR_INIT] then
-		dofile(path .. "/" .. b.DODIR_INIT)
+		dofile(gpath .. "/" .. b.DODIR_INIT)
 		names[b.DODIR_INIT] = nil
 	end
 	-- Execute all other files.
 	for name in b.set.iter(names) do
-		dofile(path .. "/" .. name)
+		dofile(gpath .. "/" .. name)
 	end
 
 	-- Descend recursively.
 	if recursive then
-		for _,name in ipairs(minetest.get_dir_list(path, false)) do
+		for _,name in ipairs(minetest.get_dir_list(gpath, true)) do
 			b.dodir(path .. "/" .. name, recursive)
 		end
 	end
