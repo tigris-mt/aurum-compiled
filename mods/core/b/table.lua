@@ -2,20 +2,12 @@ b.t = {}
 
 -- Combine tables and return the result. Later tables take priority.
 function b.t.combine(...)
-	local ret = {}
-	b.t.merge(ret, ...)
-	return ret
+	return b.t.merge({}, ...)
 end
 
 -- Combine array tables in order.
 function b.t.icombine(...)
-	local ret = {}
-	for _,t in ipairs({...}) do
-		for _,v in ipairs(t) do
-			table.insert(ret, v)
-		end
-	end
-	return ret
+	return b.t.imerge({}, ...)
 end
 
 function b.t.flagarray(t, i)
@@ -145,6 +137,16 @@ function b.t.merge(to, ...)
 			to[k] = v
 		end
 	end
+	return to
+end
+
+function b.t.imerge(to, ...)
+	for _,t in ipairs{...} do
+		for _,v in ipairs(t) do
+			table.insert(to, v)
+		end
+	end
+	return to
 end
 
 -- Iterate through all elements in the array array, but start at a random point.
