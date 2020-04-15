@@ -69,7 +69,7 @@ function b.t.imap(t, f)
 	local ret = {}
 	for i,v in ipairs(t) do
 		local new = f(v, i)
-		if new then
+		if new ~= nil then
 			table.insert(ret, new)
 		end
 	end
