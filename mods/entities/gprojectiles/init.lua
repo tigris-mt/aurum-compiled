@@ -71,8 +71,8 @@ function gprojectiles.spawn(name, def)
 	def = b.t.combine({
 		-- Initial acceleration.
 		gravity = vector.new(0, 0, 0),
-		-- Player name to blame.
-		blame_player = nil,
+		-- Blame, as a b ref_table or nil.
+		blame = nil,
 		-- Initial position.
 		pos = nil,
 		-- Direction/velocity.
@@ -86,8 +86,9 @@ function gprojectiles.spawn(name, def)
 	local object = minetest.add_entity(vector.add(def.pos, def.leave_origin and vector.normalize(def.velocity) or vector.new()), name)
 	if object then
 		local entity = object:get_luaentity()
+		entity._gprojectile = true
 		entity._data = table.copy(def.data)
-		entity._player_blame = def.blame_player
+		entity._blame = def.blame
 		entity._skip_first = def.skip_first
 		entity._skip = 2
 

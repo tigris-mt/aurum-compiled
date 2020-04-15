@@ -6,10 +6,12 @@ function gemai.context.new(def, data)
 	self.def = b.t.combine({
 		global_actions = {},
 		global_events = {},
+		global_flags = {},
 		states = {},
 	}, table.copy(def))
 
 	for k,state in pairs(self.def.states) do
+		state.flags = b.t.combine(self.def.global_flags, state.flags or {})
 		state.events = b.t.combine(self.def.global_events, state.events or {})
 		state.actions = b.t.icombine(self.def.global_actions, state.actions or {})
 	end
@@ -61,7 +63,7 @@ function gemai.context:step(dtime)
 	self.data.live_time = self.data.live_time + dtime
 	self.data.state_time = self.data.state_time + dtime
 
-	if #self.data.events > 0 then
+	while #self.data.events > 0 do
 		-- Pop the next event.
 		local event = self.data.events[1]
 		table.remove(self.data.events, 1)
@@ -79,6 +81,9 @@ function gemai.context:step(dtime)
 			if event.terminate then
 				self.data.events = {}
 			end
+
+			-- Break on the first actionable event we find.
+			break
 		end
 	end
 
