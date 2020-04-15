@@ -75,8 +75,8 @@ aurum.mobs.register("aurum_npcs:nomad_hermit", {
 				{
 					cost = t(0, 6, "food"),
 					item = "aurum_ore:gloria_ingot",
-					has = 2,
-					max = 2,
+					has = 8,
+					max = 8,
 				},
 			}
 		end,
