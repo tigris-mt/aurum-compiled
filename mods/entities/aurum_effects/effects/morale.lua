@@ -8,7 +8,7 @@ aurum.effects.register("aurum_effects:morale", {
 	apply = function(object, level)
 		if object:is_player() then
 			armor_monoid.monoid:add_change(object, {poison = 1 - level / 5, psyche = 1 - level / 5}, "aurum_effects:morale")
-			aurum.hunger.LOSS:add_change(object, 1 / (level + 1), "aurum_effects:morale")
+			aurum.hunger.LOSS:add_change(object, 1 / ((level ^ 0.5) + 1), "aurum_effects:morale")
 		end
 	end,
 	cancel = function(object)
