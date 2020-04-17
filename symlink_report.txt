@@ -8,6 +8,7 @@ menu/background.7.png -> ../screenshots/player.0.46.0.png
 menu/background.8.png -> ../screenshots/aether_crystal_forest.0.30.0.png
 menu/background.png -> ../screenshots/aurum_graveyard.0.23.2.png
 menu/icon.png -> ../mods/items/aurum_scrolls/textures/aurum_scrolls_scroll_full.png
+mods/core/aurum_craftguide/textures/default_tool_steelpick.png -> ../../../../submodules/minetest_game/mods/default/textures/default_tool_steelpick.png
 mods/core/aurum/sounds -> ../../../submodules/minetest_game/mods/default/sounds
 mods/core/player_api -> ../../submodules/minetest_game/mods/player_api
 mods/core/sfinv -> ../../submodules/minetest_game/mods/sfinv
