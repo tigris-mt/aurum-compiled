@@ -138,7 +138,11 @@ function aurum.mobs.register(name, def)
 			gemai.attach_to_entity(self, def.gemai, self._data.gemai)
 
 			self._gemai.debug_desc = function(self)
-				return ("(entity) %s %s"):format(self.entity._aurum_mob.name, minetest.pos_to_string(vector.round(self.entity.object:get_pos())))
+				return ("(entity) %s %s"):format(self.entity._aurum_mob.name, minetest.pos_to_string(vector.round(self.entity.object:get_pos() or vector.new())))
+			end
+
+			self._gemai.is_valid = function(self)
+				return self.entity.object:get_pos() ~= nil
 			end
 
 			-- If the entity is new, fire the init event to start the gemai state.
@@ -162,11 +166,7 @@ function aurum.mobs.register(name, def)
 			self._data.armor_groups = self.object:get_armor_groups()
 			self._data.gemai = self._gemai.data
 
-			-- TODO: Remove debug asserts.
-			self._gemai:assert(b.box.collide_point(b.WORLD.box, self.object:get_pos()), "object out of world")
-			local staticdata = minetest.serialize{compressed = minetest.compress(minetest.serialize(self._data))}
-			self._gemai:assert(#staticdata < 0xC000, "mob staticdata too long: " .. staticdata .. "\n" .. dump(self._data))
-			return staticdata
+			return minetest.serialize{compressed = minetest.compress(minetest.serialize(self._data))}
 		end,
 
 		on_step = function(self, dtime)
