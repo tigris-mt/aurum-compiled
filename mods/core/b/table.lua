@@ -77,30 +77,34 @@ function b.t.imap(t, f)
 end
 
 -- Return a shuffled version of an array.
-function b.t.shuffled(t)
+function b.t.shuffled(t, random)
+	random = random or math.random
+
 	local ret = {}
 	local keys = b.t.keys(t)
 	while #keys > 0 do
-		local ki = math.random(#keys)
+		local ki = random(#keys)
 		table.insert(ret, t[keys[ki]])
 		table.remove(keys, ki)
 	end
 	return ret
 end
 
-function b.t.choice(t)
-	return t[math.random(#t)]
+function b.t.choice(t, random)
+	random = random or math.random
+	return t[random(#t)]
 end
 
 -- Select a random, weighted choice.
 -- Input is in the form: {{<value>, <relative weight>}, {<another value>, <its relative weight>}}
-function b.t.weighted_choice(t)
+function b.t.weighted_choice(t, random)
+	random = random or math.random
 	local total = 0
 	for _,v in ipairs(t) do
 		total = total + v[2]
 	end
 
-	local index = math.random() * total
+	local index = random() * total
 
 	for _,v in ipairs(t) do
 		index = index - v[2]
@@ -150,12 +154,13 @@ function b.t.imerge(to, ...)
 end
 
 -- Iterate through all elements in the array array, but start at a random point.
-function b.t.ro_ipairs(array)
+function b.t.ro_ipairs(array, random)
+	random = random or math.random
 	if #array <= 1 then
 		return ipairs(array)
 	else
 		local i = 0
-		local start = math.random(#array)
+		local start = random(#array)
 		return function()
 			i = i + 1
 			local wi = ((i + start) % #array) + 1
