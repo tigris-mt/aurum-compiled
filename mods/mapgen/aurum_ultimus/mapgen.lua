@@ -70,7 +70,7 @@ minetest.register_on_generated(function(minp, maxp, blockseed)
 					-- Walls are usually solid.
 					{{name = wall}, 1},
 					-- Sometimes there are glass windows.
-					{{name = glass}, windows and 0.05 or 0},
+					{{name = glass}, windows and 0.025 or 0},
 				}, random)
 			else
 				ret.data[i] = airn
@@ -108,7 +108,8 @@ minetest.register_on_generated(function(minp, maxp, blockseed)
 
 		-- Generate structures.
 		for x=0,4 do
-			for y=0,9 do
+			-- Generation downward so that, e.g., trees are less likely to destroy rooms above them.
+			for y=9,0,-1 do
 				for z=0,4 do
 					local structure = b.t.weighted_choice(aurum.ultimus.structures, random)
 					if structure then
