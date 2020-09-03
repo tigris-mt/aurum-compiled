@@ -1,6 +1,6 @@
 aurum.ultimus.structures = {
 	-- Empty room.
-	{nil, 10},
+	{nil, 7},
 }
 
 function aurum.ultimus.register_structure(def)
@@ -39,6 +39,31 @@ aurum.ultimus.register_structure{
 	schematic = aurum.structures.f"garden_1.mts",
 	on_offset = function(c)
 		return vector.add(c.pos, vector.new(0, 1, 0))
+	end,
+}
+
+local ladder_step = {{"aurum_features:ph_1"}}
+
+aurum.ultimus.register_structure{
+	rarity = 3,
+	schematic = aurum.features.schematic(vector.new(1, 9, 1), {
+		ladder_step,
+		ladder_step,
+		ladder_step,
+		ladder_step,
+		ladder_step,
+		ladder_step,
+		ladder_step,
+		ladder_step,
+		ladder_step,
+	}),
+	on_generated = function(c)
+		for _,pos in ipairs(c:ph(1)) do
+			minetest.set_node(pos, {
+				name = "aurum_ladders:wood",
+				param2 = minetest.dir_to_wallmounted(c:dir(vector.new(0, 0, 1))),
+			})
+		end
 	end,
 }
 
@@ -118,6 +143,36 @@ aurum.ultimus.register_structure{
 }
 
 aurum.ultimus.register_structure{
+	rarity = 3,
+	make_schematic = function(c)
+		return aurum.features.schematic(vector.new(1, 1, 1), {
+			{{"aurum_features:ph_1"}},
+		})
+	end,
+	on_offset = function(c)
+		return vector.add(c.pos, vector.new(0, 1, 0))
+	end,
+	on_generated = function(c)
+		local ph = c:ph(1)
+
+		if #ph > 0 then
+			minetest.set_node(ph[1], {name = b.t.choice({
+				"aurum_trees:oak_sapling",
+				"aurum_trees:birch_sapling",
+				"aurum_trees:pander_sapling",
+				"aurum_trees:white_crystal_sapling",
+			}, function(...) return c:random(...) end)})
+
+			minetest.get_meta(ph[1]):set_int("sapling_all_terrain", 1)
+			minetest.get_meta(ph[1]):set_int("sapling_replace", 1)
+			minetest.get_meta(ph[1]):set_int("sapling_rare", 1)
+
+			minetest.get_node_timer(ph[1]):start(0.1)
+		end
+	end,
+}
+
+aurum.ultimus.register_structure{
 	rarity = 1,
 	schematic = aurum.structures.f"tunnel_1.mts",
 	on_offset = function(c)
@@ -136,6 +191,14 @@ aurum.ultimus.register_structure{
 				},
 			})
 		end
+	end,
+}
+
+aurum.ultimus.register_structure{
+	rarity = 1,
+	schematic = aurum.structures.f"tunnel_2.mts",
+	on_offset = function(c)
+		return vector.add(c.pos, vector.new(0, 1, 0))
 	end,
 }
 
