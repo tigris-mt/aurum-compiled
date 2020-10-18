@@ -41,8 +41,9 @@ local uids = storage:get_int("uids")
 
 local old = b.ref_to_table
 function b.ref_to_table(obj)
-	if obj:get_luaentity() and obj:get_luaentity()._aurum_mobs_id then
-		return {type = "aurum_mob", id = obj:get_luaentity()._aurum_mobs_id}
+	local l = obj:get_luaentity()
+	if l and l._aurum_mobs_id then
+		return {type = "aurum_mob", id = l._aurum_mobs_id, name = l.name}
 	else
 		return old(obj)
 	end
@@ -114,7 +115,9 @@ function aurum.mobs.register(name, def)
 				gemai = {},
 			}, deserialized.compressed and minetest.deserialize(minetest.decompress(deserialized.compressed)) or deserialized)
 
-			self._data.gemai = b.t.combine(b.t.deep_copy(b.t.combine(aurum.mobs.initial_data, def.initial_data)), self._data.gemai)
+			self._data.gemai = b.t.combine(b.t.deep_copy(b.t.combine(aurum.mobs.initial_data, {
+				herd = def.herd,
+			}, def.initial_data)), self._data.gemai)
 
 			self.object:set_armor_groups(b.t.combine(gdamage.armor_defaults(), def.armor_groups))
 
@@ -152,8 +155,10 @@ function aurum.mobs.register(name, def)
 
 			self._last_pos = self.object:get_pos()
 
-			-- Tick state.
-			self._gemai:step(dtime)
+			-- Tick state if this is a returning mob.
+			if self._data.initialized then
+				self._gemai:step(dtime)
+			end
 
 			self._data.initialized = true
 		end,
@@ -178,24 +183,7 @@ function aurum.mobs.register(name, def)
 			-- self.object:set_nametag_attributes{text = tag}
 			self._gemai:step(dtime)
 
-			local remove = {}
-			for name,state in pairs(self._gemai.data.status_effects) do
-				state.duration = state.duration - dtime
-				if state.duration < 0 then
-					aurum.effects.effects[name].cancel(self.object, state.level)
-					table.insert(remove, name)
-				elseif state.next then
-					state.next = state.next - dtime
-					if state.next < 0 then
-						aurum.effects.effects[name].apply(self.object, state.level)
-						state.next = aurum.effects.effects[name].repeat_interval
-					end
-				end
-			end
-
-			for _,name in ipairs(remove) do
-				self._gemai.data.status_effects[name] = nil
-			end
+			aurum.effects.operate(self.object, self._gemai.data.status_effects, dtime)
 		end,
 
 		on_death = function(self, killer)
@@ -214,7 +202,8 @@ function aurum.mobs.register(name, def)
 		on_punch = function(self, puncher)
 			if puncher ~= self.object then
 				local ref_table = aurum.get_blame(puncher) or b.ref_to_table(puncher)
-				if ref_table then
+				local was_parent = self._gemai.data.parent and b.ref_table_equal(ref_table, self._gemai.data.parent)
+				if ref_table and not was_parent then
 					aurum.effects.apply_tool_effects(puncher:get_wielded_item(), self.object, ref_table)
 					self._gemai:fire_event("punch", {
 						other = ref_table,

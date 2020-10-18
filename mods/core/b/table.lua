@@ -170,3 +170,14 @@ function b.t.ro_ipairs(array, random)
 		end
 	end
 end
+
+-- Compare all key values from tables.
+function b.t.equal(t1, t2)
+	-- Iterate over all keys, from both t1 and t2.
+	for k in b.set.iter(b.set._or(b.set(b.t.keys(t1)), b.set(b.t.keys(t2)))) do
+		if t1[k] ~= t2[k] then
+			return false
+		end
+	end
+	return true
+end
