@@ -6,3 +6,5 @@ function b.ref_to_table(obj)
 		return {type = "player", id = obj:get_player_name()}
 	end
 end
+
+b.ref_table_equal = b.t.equal
