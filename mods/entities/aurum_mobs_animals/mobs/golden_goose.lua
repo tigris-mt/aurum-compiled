@@ -1,4 +1,4 @@
-local S = minetest.get_translator()
+local S = aurum.get_translator()
 
 aurum.mobs.register("aurum_mobs_animals:golden_goose", {
 	description = S"Golden Goose",
@@ -101,7 +101,7 @@ aurum.mobs.register("aurum_mobs_animals:golden_goose", {
 
 aurum.mobs.register_spawn{
 	mob = "aurum_mobs_animals:golden_goose",
-	chance = 20 ^ 3,
+	chance = 18 ^ 3,
 	biomes = aurum.biomes.get_all_group("aurum:aether", {"base"}),
 }
 
