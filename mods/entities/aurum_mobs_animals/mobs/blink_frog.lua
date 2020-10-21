@@ -9,7 +9,7 @@ aurum.mobs.register("aurum_mobs_animals:blink_frog", {
 		textures = {"aurum_mobs_animals_blink_frog.png"},
 		visual_size = {x = 1, y = 1},
 
-		hp_max = 10,
+		hp_max = 5,
 	},
 
 	initial_data = {
@@ -22,7 +22,8 @@ aurum.mobs.register("aurum_mobs_animals:blink_frog", {
 				["aurum_effects:poison"] = {level = 1, duration = 5},
 			},
 		}),
-		base_speed = 1,
+		-- Simulate teleportation.
+		base_speed = 6,
 	},
 
 	gemai = {
@@ -115,7 +116,7 @@ aurum.mobs.register("aurum_mobs_animals:blink_frog", {
 
 			go = {
 				actions = {
-					"aurum_mobs:teleport",
+					"aurum_mobs:go",
 					"aurum_mobs:timeout",
 				},
 
@@ -127,7 +128,7 @@ aurum.mobs.register("aurum_mobs_animals:blink_frog", {
 			go_fight = {
 				actions = {
 					"aurum_mobs:adrenaline",
-					"aurum_mobs:teleport",
+					"aurum_mobs:go",
 					"aurum_mobs:timeout",
 				},
 				events = {
