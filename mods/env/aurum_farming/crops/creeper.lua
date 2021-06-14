@@ -12,7 +12,7 @@ local function vine_grow(pos, node, random)
 			return vector.distance(pos, v) <= 1.5 and v or nil
 		end)
 		if #poses > 0 then
-			for i=1,math.min(2, random(#poses)) do
+			for i=1,random(math.min(2, #poses)) do
 				local vine_pos = vector.add(poses[i], vector.new(0, 1, 0))
 				minetest.set_node(vine_pos, {name = "aurum_farming:creeper_vine", param2 = random(0, node.param2 - 1)})
 				minetest.get_node_timer(vine_pos):start(time())
@@ -34,7 +34,11 @@ aurum.farming.register_crop("aurum_farming:creeper", {
 
 	time = time,
 
-	seed = {},
+	seed = {
+		description = S"Creeper Nuts",
+		groups = {edible = 4},
+		on_use = minetest.item_eat(4),
+	},
 
 	on_growth = function(pos, def, stage)
 		-- Mature plant, send out vines.
@@ -80,9 +84,8 @@ minetest.register_node("aurum_farming:creeper_vine", {
 	_on_grow_plant = function(pos, node) return vine_grow(pos, node, math.random) end,
 
 	drop = {
-		max_items = 2,
 		items = {
-			{rarity = 20, items = {"aurum_farming:creeper_seed"}},
+			{rarity = 10, items = {"aurum_farming:creeper_seed"}},
 			{rarity = 1, items = {"aurum_farming:creeper_vine"}},
 		},
 	},
