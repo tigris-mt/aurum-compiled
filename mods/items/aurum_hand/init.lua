@@ -40,7 +40,7 @@ aurum_hand.def = {
 		},
 	},
 
-	groups = {not_in_creative_inventory = 1},
+	groups = {not_in_creative_inventory = 1, tool_hand = 1, tool = 1},
 
 	_enchant_levels = 2,
 	_enchants = {"hand"},
