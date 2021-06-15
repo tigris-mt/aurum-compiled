@@ -1,14 +1,18 @@
 b.cache = {}
 
 function b.cache.simple(f, get_key)
-	local cache = {}
+	local cache = {
+		cache = {},
+		stored = {},
+		f = f,
+	}
 	local stored = {}
 	return function(...)
 		local key = get_key(...)
-		if not stored[key] then
-			cache[key] = f(...)
-			stored[key] = true
+		if not cache.stored[key] then
+			cache.cache[key] = f(...)
+			cache.stored[key] = true
 		end
-		return cache[key]
-	end
+		return cache.cache[key]
+	end, cache
 end
