@@ -83,6 +83,7 @@ minetest.register_node("elevator:shaft", {
     sunlight_propagates = true,
     groups = moditems.el_shaft_groups,
     sounds = moditems.sounds_stone(),
+    climbable = true,
     node_box = {
         type = "fixed",
         fixed = {
@@ -145,7 +146,8 @@ minetest.register_node("elevator:motor", {
 	  _mcl_hardness = 5, -- mineclone2 specific
 })
 
-local box = {
+-- Box of the active entitity.
+local box_box = {
     { 0.48, -0.5,-0.5,  0.5,  1.5, 0.5},
     {-0.5 , -0.5, 0.48, 0.48, 1.5, 0.5},
     {-0.5,  -0.5,-0.5 ,-0.48, 1.5, 0.5},
@@ -169,12 +171,12 @@ minetest.register_node("elevator:elevator_box", {
 
     collision_box = {
             type = "fixed",
-            fixed = box,
+            fixed = box_box,
     },
 
     node_box = {
             type = "fixed",
-            fixed = box,
+            fixed = box_box,
     },
 
     tiles = {
@@ -229,6 +231,7 @@ for _,mode in ipairs({"on", "off"}) do
         paramtype = "light",
         paramtype2 = "facedir",
         on_rotate = moditems.on_rotate_disallow,
+        climbable = true,
 
         selection_box = {
                 type = "fixed",
@@ -295,9 +298,17 @@ for _,mode in ipairs({"on", "off"}) do
             return minetest.item_place(itemstack, placer, pointed_thing)
         end,
 
-        on_rightclick = function(pos, node, sender)
+        on_rightclick = function(pos, node, sender, itemstack, pointed_thing)
             if not sender or not sender:is_player() then
                 return
+            end
+            -- When the player is holding elevator components, just place them instead of opening the formspec.
+            if ({
+              ["elevator:elevator_off"] = true,
+              ["elevator:shaft"] = true,
+              ["elevator:motor"] = true,
+            })[sender:get_wielded_item():get_name()] then
+                return core.item_place_node(itemstack, sender, pointed_thing)
             end
             local formspec
             local meta = minetest.get_meta(pos)
