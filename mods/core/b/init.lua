@@ -33,6 +33,7 @@ b.dofile("chance.lua")
 b.dofile("cache.lua")
 b.dofile("table.lua")
 b.dofile("set.lua")
+b.dofile("uid.lua")
 
 b.dofile("color.lua")
 b.dodir("geometry")
