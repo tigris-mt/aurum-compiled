@@ -19,8 +19,11 @@ aurum.features.default_decoration_def = {
 	-- Called on generation.
 	on_generated = function(context) end,
 
+	-- Default offset.
+	offset = vector.new(0, 0, 0),
+
 	-- Called on offsetting, return new pos or nil to cancel placement.
-	on_offset = function(base_context) return base_context.pos end,
+	on_offset = function(base_context) return vector.add(base_context.pos, base_context.def.offset) end,
 
 	-- Schematic specifier.
 	schematic = nil,
@@ -167,10 +170,11 @@ function aurum.features.structure_context(base, box, at, rotation)
 	}, {__index = metatable})
 end
 
-function aurum.features.place_decoration(pos, def, random)
+function aurum.features.place_decoration(pos, def, random, on_generated)
 	local base_context = {
 		pos = pos,
 		random = random,
+		def = def,
 		-- For individual structure use.
 		s = {},
 	}
@@ -225,11 +229,16 @@ function aurum.features.place_decoration(pos, def, random)
 			local rotname = {"0", "90", "180", "270"}
 			minetest.place_schematic(real_pos, schematic, rotname[rotation + 1], {}, def.force_placement)
 
-			-- Run callback.
-			def.on_generated(aurum.features.structure_context(base_context, b.box.new(
+			local context = aurum.features.structure_context(base_context, b.box.extremes(b.box.new(
 				at(vector.new(0, 0, 0)),
 				at(limit)
-			), at, rotation))
+			)), at, rotation)
+
+			-- Run callbacks.
+			def.on_generated(context)
+			if on_generated then
+				on_generated(context)
+			end
 		end
 	end
 end
