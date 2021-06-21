@@ -11,8 +11,6 @@ menu/background.png -> ../screenshots/aurum_graveyard.0.23.2.png
 menu/icon.png -> ../mods/items/aurum_scrolls/textures/aurum_scrolls_scroll_full.png
 mods/core/aurum_craftguide/textures/default_tool_steelpick.png -> ../../../../submodules/minetest_game/mods/default/textures/default_tool_steelpick.png
 mods/core/aurum/sounds -> ../../../submodules/minetest_game/mods/default/sounds
-mods/core/player_api -> ../../submodules/minetest_game/mods/player_api
-mods/core/sfinv -> ../../submodules/minetest_game/mods/sfinv
 mods/env/aurum_farming/textures/aurum_farming_pumpkin_4.png -> aurum_farming_pumpkin_3.png
 mods/items/aurum_base/sounds/default_cool_lava.1.ogg -> ../../../../submodules/minetest_game/mods/default/sounds/default_cool_lava.1.ogg
 mods/items/aurum_base/sounds/default_cool_lava.2.ogg -> ../../../../submodules/minetest_game/mods/default/sounds/default_cool_lava.2.ogg
@@ -34,5 +32,7 @@ mods/player/aurum_gui/textures/gui_furnace_arrow_bg.png -> ../../../../submodule
 mods/player/aurum_gui/textures/gui_furnace_arrow_fg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_furnace_arrow_fg.png
 mods/player/aurum_gui/textures/gui_hb_bg.png -> ../../../../submodules/minetest_game/mods/default/textures/gui_hb_bg.png
 mods/player/aurum_gui/textures/heart.png -> ../../../../submodules/minetest_game/mods/default/textures/heart.png
+mods/player/player_api -> ../../submodules/minetest_game/mods/player_api
+mods/player/sfinv -> ../../submodules/minetest_game/mods/sfinv
 screenshot.png -> screenshots/aurum_graveyard.0.23.2.png
 tools/pandoc_bbcode_phpbb.lua -> ../submodules/2bbcode/bbcode_phpbb.lua
