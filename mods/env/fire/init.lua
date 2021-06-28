@@ -327,6 +327,7 @@ elseif minetest.get_modpath("aurum") then
 	local d = {
 		damage_per_second = 20,
 		_damage_type = "burn",
+		groups = b.t.combine(fire_node.groups, {item_burn = 1}),
 	}
 	minetest.override_item("fire:basic_flame", d)
 	minetest.override_item("fire:permanent_flame", d)
