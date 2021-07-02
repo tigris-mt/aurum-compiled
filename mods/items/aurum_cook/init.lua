@@ -3,6 +3,21 @@ aurum.cook = {}
 
 local cook_nodes = {}
 
+local function get_mt(meta)
+	local mt = {}
+	for _,k in ipairs{
+		-- How much time did the last fuel give us?
+		"burn_time",
+		-- How much time of the last fuel has been burned?
+		"burned",
+		-- How long has the current src cooked for?
+		"cooking",
+	} do
+		mt[k] = meta:get_float(k)
+	end
+	return mt
+end
+
 -- Register a cooker.
 function aurum.cook.register(name, def)
 	local def = b.t.combine({
@@ -47,10 +62,11 @@ function aurum.cook.register(name, def)
 		return stack:get_count()
 	end
 
-	local form = smartfs.create(name, function(state)
-		state:size(8, 8)
+	local form = aurum.gui.node_smartfs(name, function(state)
+		local s = aurum.player.inventory_size(state.location.player)
+		state:size(math.max(8, s.x), s.y + 4)
 
-		local pos = state.location.pos
+		local pos = state.param.pos
 		local meta = minetest.get_meta(pos)
 		local invloc = ("nodemeta:%d,%d,%d"):format(pos.x, pos.y, pos.z)
 
@@ -62,7 +78,7 @@ function aurum.cook.register(name, def)
 
 		state:inventory(4.5, 1, 2, 2, "dst"):setLocation(invloc)
 
-		state:inventory(0, 4, 8, 4, "main")
+		state:inventory(0, 4, s.x, s.y, "main")
 
 		state:element("code", {name = "listring", code = [[
 			listring[]] .. invloc .. [[;dst]
@@ -87,28 +103,27 @@ function aurum.cook.register(name, def)
 			inv:set_size("src", 1)
 			inv:set_size("dst", 2 * 2)
 			inv:set_size("fuel", 1)
-
-			form:attach_to_node(pos)
 		end,
 
-		on_receive_fields = smartfs.nodemeta_on_receive_fields,
+		on_rightclick = function(pos, _, clicker)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+
+			local mt = get_mt(meta)
+			local result = minetest.get_craft_result({method = "cooking", width = 1, items = inv:get_list("src")})
+
+			form:show(pos, clicker, {
+				fuel = mt.burn_time > 0 and mt.burned / mt.burn_time,
+				cook = result.time > 0 and mt.cooking / result.time,
+			})
+		end,
 
 		on_timer = function(pos, elapsed)
 			local node = minetest.get_node(pos)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 
-			local mt = {}
-			for _,k in ipairs{
-				-- How much time did the last fuel give us?
-				"burn_time",
-				-- How much time of the last fuel has been burned?
-				"burned",
-				-- How long has the current src cooked for?
-				"cooking",
-			} do
-				mt[k] = meta:get_float(k)
-			end
+			local mt = get_mt(meta)
 
 			local result, replacement
 
@@ -183,7 +198,7 @@ function aurum.cook.register(name, def)
 			end
 
 			-- Reset the formspec.
-			form:attach_to_node(pos, {
+			form:reshow(pos, {
 				fuel = mt.burn_time > 0 and mt.burned / mt.burn_time,
 				cook = result.time > 0 and mt.cooking / result.time,
 			})
