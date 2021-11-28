@@ -1,2 +1,0 @@
-# Register standard signs, requires Minetest Game.
-signs_lib_standard (Register standard signs) bool true
